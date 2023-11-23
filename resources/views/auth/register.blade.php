@@ -3,14 +3,13 @@
 @section('content')
     <main class="main-content  mt-0">
         <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
-            style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signup-cover.jpg'); background-position: top;">
+            style="background-image: url('https://scontent.fkul21-2.fna.fbcdn.net/v/t39.30808-6/305837708_570654004860041_5002931631043837671_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=ZGs4ohw3K4IAX-qH2WP&_nc_ht=scontent.fkul21-2.fna&oh=00_AfBGiyPO9Lv5aq6CtmuZMigxER6aZjPvU5OVQQJ9HJ2VLw&oe=65644AC3'); background-position: bottom;">
             <span class="mask bg-gradient-dark opacity-6"></span>
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 text-center mx-auto">
-                        <h1 class="text-white mb-2 mt-5">Welcome!</h1>
-                        <p class="text-lead text-white">Use these awesome forms to login or create new account in your
-                            project for free.</p>
+                        <h1 class="text-white mb-2 mt-5">Welcome to FKKMS!</h1>
+                        <p class="text-lead text-white">To get started, create your account here for seamless access to our services. Let's begin your journey with us!</p>
                     </div>
                 </div>
             </div>
