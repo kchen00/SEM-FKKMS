@@ -54,6 +54,14 @@
                                 </div>
 
                                 <!-- user type drop down -->
+                                <div class="flex flex-col mb-3">
+                                    <select name="role" class="form-control" placeholder="Select your user group">
+                                        <option selected disabled>Select your user group</option>
+                                        <option value="student">Student</option>
+                                        <option value="vendor">Outside Vendor</option>
+                                    </select>
+                                    @error('role') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                                </div>
 
                                 <!-- t and c confirm -->
                                 <div class="form-check form-check-info text-start">

@@ -28,7 +28,8 @@ class User extends Authenticatable
         // 'country',
         // 'postal',
         // 'about'
-        'phone_num'
+        'phone_num',
+        'role'
     ];
 
 
