@@ -19,18 +19,39 @@
                                     <form role="form" method="POST" action="{{ route('login.perform') }}">
                                         @csrf
                                         @method('post')
+                                        <!-- email input -->
                                         <div class="flex flex-col mb-3">
-                                            <input type="email" name="email" class="form-control form-control-lg" value="{{ old('email') ?? 'admin@argon.com' }}" aria-label="Email">
+                                            <input type="email" name="email" class="form-control form-control-lg" value="{{ old('email')}}" placeholder="Email" paaria-label="Email">
                                             @error('email') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
                                         </div>
+
+                                        <!-- password input -->
                                         <div class="flex flex-col mb-3">
-                                            <input type="password" name="password" class="form-control form-control-lg" aria-label="Password" value="secret" >
+                                            <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password">
                                             @error('password') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
                                         </div>
+
+                                        <!-- role selection -->
+                                        <div class="flex flex-col mb-3">
+                                        <select name="role" class="form-control" placeholder="Select your user group">
+                                            <option selected disabled>Select your user group</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="tech_team">Technical Team</option>
+                                            <option value="pp_admin">PUPUK Admin</option>
+                                            <option value="bursary">Bursary</option>
+                                            <option value="student">Student</option>
+                                            <option value="vendor">Outside Vendor</option>
+                                        </select>
+                                        @error('role') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                                        </div>
+
+                                        <!-- remember me toggle -->
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" name="remember" type="checkbox" id="rememberMe">
                                             <label class="form-check-label" for="rememberMe">Remember me</label>
                                         </div>
+
+                                        <!-- submit button -->
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
                                         </div>

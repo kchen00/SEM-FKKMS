@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string("phone_num")->unique();
-            $table->enum("role", ["admin", "tech_team", "pp-admin", "bursary", "student", "vendor"]);
+            $table->enum("role", ["admin", "tech_team", "pp_admin", "bursary", "student", "vendor"]);
             $table->rememberToken();
             $table->timestamps();
         });
