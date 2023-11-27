@@ -16,7 +16,7 @@ class LoginController extends Controller
      */
     public function show()
     {
-        return view('auth.login');
+        return view('ManageUser.login');
     }
 
     public function login(Request $request)
@@ -24,9 +24,10 @@ class LoginController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
+            'role' => ['required']
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role'=> $request->role])) {
             $request->session()->regenerate();
 
             return redirect()->intended('dashboard');
@@ -34,6 +35,8 @@ class LoginController extends Controller
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
+            'password' => 'The provided credentials do not match our records.',
+            'role' => 'The provided credentials do not match our records.',
         ]);
     }
 
