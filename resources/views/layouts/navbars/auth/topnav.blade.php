@@ -8,10 +8,9 @@
                 <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
                 <li class="breadcrumb-item text-sm text-white active" aria-current="page">{{ $title }}</li>
             </ol>
-            <h6 class="font-weight-bolder text-white mb-0">{{ $title }}</h6>
+            <h1 class="font-weight-bolder text-white mb-0">{{ $welcome_message }}</h1>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-            <!-- search bar -->
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">         
                 <ul class="navbar-nav  justify-content-end">
                     <!-- logout button -->
@@ -27,7 +26,7 @@
                         </form>
                     </li>
 
-                    <!-- toggle side nav -->
+                    <!-- toggle side nav when window is narrow-->
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                         <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
                             <div class="sidenav-toggler-inner">
