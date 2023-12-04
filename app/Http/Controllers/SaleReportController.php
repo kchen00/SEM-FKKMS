@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\sale_report;
 use App\Http\Requests\Storesale_reportRequest;
 use App\Http\Requests\Updatesale_reportRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class SaleReportController extends Controller
 {
@@ -14,6 +16,15 @@ class SaleReportController extends Controller
     public function index()
     {
         //
+        $user = Auth::getUser();
+        if($user->role == 'student') {
+            return view('ManageReport.ParticipantView');
+        } else if ($user->role == 'pp_admin'){
+            return view('ManageReport.PPView');
+        }
+
+        return abort(404);
+
     }
 
     /**
