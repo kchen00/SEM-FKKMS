@@ -23,8 +23,8 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;            
-            
+use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\SaleReportController;
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
@@ -47,3 +47,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
+
+//manage sales report routes
+Route::get("/show-report", [SaleReportController::class, 'index'])->middleware("auth")->name("show-report");
