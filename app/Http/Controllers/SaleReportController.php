@@ -16,7 +16,7 @@ class SaleReportController extends Controller
     public function index()
     {
         $user = Auth::getUser();
-        $role = "student";
+        $role = $user->role;
         if($role == 'student') {
             return view('ManageReport.ShowReport', [$role => $role]);
         } else if ($role == 'pp_admin'){
