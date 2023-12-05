@@ -15,12 +15,12 @@ class SaleReportController extends Controller
      */
     public function index()
     {
-        //
         $user = Auth::getUser();
-        if($user->role == 'student') {
-            return view('ManageReport.ParticipantView');
-        } else if ($user->role == 'pp_admin'){
-            return view('ManageReport.PPView');
+        $role = "student";
+        if($role == 'student') {
+            return view('ManageReport.ShowReport', [$role => $role]);
+        } else if ($role == 'pp_admin'){
+            return view('ManageReport.SelectKIOSK');
         }
 
         return abort(404);
