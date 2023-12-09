@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\vendor;
+use App\Models\Vendor;
 use App\Http\Requests\StorevendorRequest;
 use App\Http\Requests\UpdatevendorRequest;
 
@@ -27,7 +27,7 @@ class VendorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorevendorRequest $request)
+    public function store(StoreVendorRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class VendorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(vendor $vendor)
+    public function show(Vendor $vendor)
     {
         //
     }
@@ -43,7 +43,7 @@ class VendorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(vendor $vendor)
+    public function edit(Vendor $vendor)
     {
         //
     }
@@ -51,7 +51,7 @@ class VendorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatevendorRequest $request, vendor $vendor)
+    public function update(UpdateVendorRequest $request, Vendor $vendor)
     {
         //
     }
@@ -59,7 +59,7 @@ class VendorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(vendor $vendor)
+    public function destroy(Vendor $vendor)
     {
         //
     }
