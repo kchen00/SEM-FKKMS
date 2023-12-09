@@ -11,6 +11,11 @@
     if($role == "student" or $role == "vendor") {
         $enable_action = true; 
     }
+
+    // hardcoded variable values, remove after controller is developed
+    $pp_comments = "good job😁😁😁";
+    $comment_date = "1/1/2023";
+
 @endphp
 <div class="container-fluid py-4">
     <div class="container">
@@ -20,8 +25,8 @@
                 <div class="row">
                     {{-- infor for pupuk admin, hide when the user is participant --}}
                     @if($role == "pp_admin")
-                    <div class="col-sm"><span>KIOSK ID:</span></div>
-                    <div class="col-sm"><span>KIOSK Owner:</span></div>
+                    <div class="col-sm"><span>KIOSK ID:  {{  $kiosk_id  }}</span></div>
+                    <div class="col-sm"><span>KIOSK Owner:  {{  $kiosk_owner  }}</span></div>
                     @endif
                     {{-- sort sales dropdown options --}}
                     <div class="col-sm">
@@ -57,12 +62,11 @@
                 <span class="text-gradient text-primary text-uppercase text-xs font-weight-bold my-2">Comments by PUPUK admin</span>
             </div>
             <div class="card-body pt-2">
-                <p>Good job! 😁😁😁</p>
+                <p>{{ $pp_comments  }}</p>
                 <div class="author align-items-center">
                     <div class="name ps-3">
-                        <span>Mathew Glock</span>
                         <div class="stats">
-                            <small>Posted on 28 February</small>
+                            <small>Posted on {{  $comment_date  }}</small>
                         </div>
                     </div>
                 </div>
@@ -99,10 +103,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        @php
+                            $month_name = [
+                                            'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                            'August', 'September', 'October', 'November', 'December'
+                                        ];
+                         @endphp
+                        {{-- for loop to create rows dynamically --}}
+                        @for ($i = 0; $i < 12; $i++)
+                        <tr>                            
                             <!-- month column -->
                             <td class="align-middle text-left">
-                                <p class="text-xs font-weight-bold text-uppercase mb-0 ">January</p>
+                                <p class="text-xs font-weight-bold text-uppercase mb-0 ">{{ $month_name[$i] }}</p>
                             </td>
 
                             <!-- date added column -->
@@ -131,6 +143,7 @@
                             <td class="align-middle">
                                 <p class="text-xs font-weight-bold mb-0">RM100.00</p>
                             </td>
+                        @endfor
                         </tr>
                     </tbody>
                 </table>

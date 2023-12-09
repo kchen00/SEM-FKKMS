@@ -51,6 +51,11 @@ class SaleReportController extends Controller
         //
     }
 
+    // function to retreive KISOK id and KIOSK owner from the database
+    public function get_kisok_id_owner() {
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
