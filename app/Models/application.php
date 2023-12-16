@@ -14,6 +14,8 @@ class application extends Model
         'status',
         'description',
         'parti_ID',
+        'startdate',
+        'enddate',
         // 'startdate',
         // 'enddate'
     ];

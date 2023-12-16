@@ -18,8 +18,9 @@
                         </div>
                         @if (session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{session('error')}}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         @endif
                     </div>
@@ -71,11 +72,14 @@
                                             <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                                         </td> --}}
                                             <td class="align-middle text-center">
-                                                <a href="{{ route('application.edit', $application['application_ID']) }}"
+                                                <a class="btn btn-info" href="{{ route('application.edit', $application['application_ID']) }}"
                                                     class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
                                                     data-original-title="Edit user">
                                                     Edit
                                                 </a>
+                                                <a class="btn btn-primary"
+                                                    href="{{ route('file.display', ['fileName' => $application['SSM']]) }}"
+                                                    target="_blank">View File</a>
                                             </td>
                                         </tr>
                                     @endforeach

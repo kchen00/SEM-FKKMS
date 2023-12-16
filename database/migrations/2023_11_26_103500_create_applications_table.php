@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string("SSM", 256)->nullable();
             $table->enum("status", ["received","on review","rejected", "accepted"])->nullable();
             $table->string("description", 256)->nullable();
+            $table->date("startdate")->nullable();
+            $table->date("enddate")->nullable();
             $table->bigInteger("parti_ID")->references("parti_ID")->on("pariticipants")->nullable();            
             $table->timestamps();
         });

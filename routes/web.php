@@ -48,6 +48,8 @@ Route::post('/application/store', [ApplicationController::class, 'store'])->midd
 Route::post('/application/update/{id}', [ApplicationController::class, 'update'])->middleware('auth')->name('application.update');
 Route::post('/application/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->middleware('auth')->name('application.adminUpdate');
 Route::get('/application/show', [ApplicationController::class, 'show'])->middleware('auth')->name('application.show');
+Route::get('documents/{fileName}', [ApplicationController::class, 'displayFile'])->name('file.display');
+
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

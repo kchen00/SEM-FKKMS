@@ -57,7 +57,28 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">SSM</label>
-                                        <input class="form-control" type="file" name="SSM">
+                                        {{-- <input class="form-control" type="file" name="SSM"> --}}
+                                        <input type="file" id="file" class="form-control" name="file"
+                                                    placeholder="document" required accept=".pdf">
+
+                                                <script>
+                                                    // JavaScript function to validate file extension
+                                                    function validateFileExtension() {
+                                                        var allowedExtensions = /(\.pdf)$/i; // Regular expression to allow only PDF files
+
+                                                        var fileInput = document.getElementById('file');
+                                                        var filePath = fileInput.value;
+                                                        var fileExtension = filePath.substr(filePath.lastIndexOf('.')).toLowerCase();
+
+                                                        if (!allowedExtensions.exec(fileExtension)) {
+                                                            alert('Only PDF files are allowed.');
+                                                            fileInput.value = ''; // Clear the file input value
+                                                            return false;
+                                                        }
+
+                                                        return true;
+                                                    }
+                                                    </script>
                                     </div>
                                 </div>
                             </div>

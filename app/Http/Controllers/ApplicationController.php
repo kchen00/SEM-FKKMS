@@ -8,6 +8,10 @@ use App\Http\Requests\UpdateapplicationRequest;
 use App\Models\participant;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class ApplicationController extends Controller
 {
@@ -21,7 +25,6 @@ class ApplicationController extends Controller
         $applications = application::where('parti_ID', $participant['parti_ID'])
         ->orderBy('created_at', 'desc')
         ->get();
-        // dd($applications, $participant);
         return view('manageApplication.manage',compact('applications'));
     }
 
@@ -48,7 +51,6 @@ class ApplicationController extends Controller
         else{
             return view('manageApplication.create');
         }
-        // dd($applications, $participant);
     }
 
     /**
@@ -57,15 +59,44 @@ class ApplicationController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all());
+        $file = $request->file('file');
+        $fileName = $request->input('enddate') . $request->input('startdate') . '.pdf';
+
+        Storage::disk('local')->makeDirectory('documents');
+
+        Storage::disk('local')->put('documents/' . $fileName, file_get_contents($file->getRealPath()));
+
+    
         $user = auth()->user();
         $participant = participant::where('user_ID', $user['user_ID'])->first();
         $request->merge([
             'parti_ID' => $participant['parti_ID'],
             'status'=> 'received',
+            'SSM' => $fileName
         ]);
-        // dd($request, $participant, $user);
         application::create($request->all());
         return redirect(route('application.manage'));
+    }
+
+    public function displayFile($fileName)
+    {
+        $filePath = 'documents/' . $fileName;
+
+        // Check if the file exists
+        if (Storage::disk('local')->exists($filePath)) {
+            $file = Storage::disk('local')->get($filePath);
+            $mimeType = Storage::disk('local')->mimeType($filePath);
+
+            // Return the file response with appropriate headers
+            return Response::make($file, 200, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            ]);
+        } else {
+            // File not found
+            abort(404);
+        }
     }
 
     /**
