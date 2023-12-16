@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\application;
 use App\Http\Requests\StoreapplicationRequest;
 use App\Http\Requests\UpdateapplicationRequest;
+use App\Models\kiosk;
 use App\Models\participant;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Http\Request;
@@ -44,9 +45,13 @@ class ApplicationController extends Controller
         $applications = Application::where('parti_ID', $participant->parti_ID)
         ->whereIn('status', ['received', 'on reviewed'])
         ->get();
+        $kiosks = kiosk::where('rented',false)->get();
         if($applications->count()> 0)
         {
             return redirect()->route('application.manage')->with('error', 'Already have on going application');
+        }
+        elseif($kiosks->count() < 1){
+            return redirect()->route('application.manage')->with('error', 'no available kiosk');
         }
         else{
             return view('manageApplication.create');
@@ -61,11 +66,16 @@ class ApplicationController extends Controller
         //
         // dd($request->all());
         $file = $request->file('file');
-        $fileName = $request->input('enddate') . $request->input('startdate') . '.pdf';
-
-        Storage::disk('local')->makeDirectory('documents');
-
-        Storage::disk('local')->put('documents/' . $fileName, file_get_contents($file->getRealPath()));
+        if($file){
+            $fileName = $request->input('enddate') . $request->input('startdate') . '.pdf';
+    
+            Storage::disk('local')->makeDirectory('documents');
+    
+            Storage::disk('local')->put('documents/' . $fileName, file_get_contents($file->getRealPath()));
+        }
+        else{
+            $fileName = null;
+        }
 
     
         $user = auth()->user();
@@ -125,8 +135,9 @@ class ApplicationController extends Controller
         $status = [
             'status' => 'on review'
         ];
+        $kiosks = kiosk::where('rented',false)->get();
         $application->update($status);
-        return view('manageApplication.adminEdit',compact('application'));
+        return view('manageApplication.adminEdit',compact('application','kiosks'));
     }
 
     /**

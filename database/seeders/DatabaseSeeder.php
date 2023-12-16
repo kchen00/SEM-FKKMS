@@ -46,5 +46,26 @@ class DatabaseSeeder extends Seeder
         DB::table('participants')->insert([
             'user_ID' => '3',
         ]);
+
+        DB::table('kiosks')->insert([
+            'description' => 'left-wing no 1',
+            'rented' => false,
+        ]);
+        DB::table('kiosks')->insert([
+            'description' => 'right-wing no 1',
+            'rented' => false,
+        ]);
+        DB::table('kiosks')->insert([
+            'description' => 'left-wing no 2',
+            'rented' => false,
+        ]);
+        DB::table('kiosks')->insert([
+            'description' => 'right-wing no 2',
+            'rented' => false,
+        ]);
+        DB::table('kiosks')->insert([
+            'description' => 'left-wing no 3',
+            'rented' => false,
+        ]);
     }
 }

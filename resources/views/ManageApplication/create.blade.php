@@ -59,7 +59,7 @@
                                         <label class="form-control-label">SSM</label>
                                         {{-- <input class="form-control" type="file" name="SSM"> --}}
                                         <input type="file" id="file" class="form-control" name="file"
-                                                    placeholder="document" required accept=".pdf">
+                                                    placeholder="document" accept=".pdf">
 
                                                 <script>
                                                     // JavaScript function to validate file extension

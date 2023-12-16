@@ -78,7 +78,7 @@
                                                     Edit
                                                 </a>
                                                 <a class="btn btn-primary"
-                                                    href="{{ route('file.display', ['fileName' => $application['SSM']]) }}"
+                                                    {{-- href="{{ route('file.display', ['fileName' => $application['SSM']]) }}" --}}
                                                     target="_blank">View File</a>
                                             </td>
                                         </tr>

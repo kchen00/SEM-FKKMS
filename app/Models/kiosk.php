@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class kiosk extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'description',
+        'rented',
+    ];
 }
