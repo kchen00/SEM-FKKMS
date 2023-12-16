@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id("application_ID");
             //store ssm file file path
-            $table->string("SSM", 256);
-            $table->enum("status", ["rejected", "accepted"]);
-            $table->string("description", 256);
-            $table->bigInteger("parti_ID")->references("parti_ID")->on("pariticipants");            
+            $table->string("SSM", 256)->nullable();
+            $table->enum("status", ["received","on review","rejected", "accepted"])->nullable();
+            $table->string("description", 256)->nullable();
+            $table->bigInteger("parti_ID")->references("parti_ID")->on("pariticipants")->nullable();            
             $table->timestamps();
         });
     }
