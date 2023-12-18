@@ -3,9 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
-class Admin extends Model
+class Admin extends User
 {
     use HasFactory;
+
+    // disable time stamps in table
+    public $timestamps = false;
+
+    //specifying table primary key
+    protected $primaryKey = "admin_ID";
+
+    protected $fillable = [
+        "user_ID"
+    ];
 }

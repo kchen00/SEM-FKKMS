@@ -17,7 +17,7 @@ class SaleReportController extends Controller
     {
         $user = Auth::getUser();
         $role = $user->role;
-        if($role == 'student') {
+        if($role == 'student' or $role == "vendor") {
             return view('ManageReport.ShowReport', [$role => $role]);
         } else if ($role == 'pp_admin'){
             return view('ManageReport.SelectKIOSK');
@@ -78,5 +78,20 @@ class SaleReportController extends Controller
     public function destroy(sale_report $sale_report)
     {
         //
+    }
+
+    // function to add comment by PUPUK admin
+    public function add_comment() {
+
+    }
+
+    // function to edit comment by PUPUK admin
+    public function edit_comment() {
+
+    }
+
+    // function to show comment by pupuk admin
+    public function show_commnet() {
+
     }
 }
