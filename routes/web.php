@@ -50,3 +50,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 //manage sales report routes
 Route::get("/show-report", [SaleReportController::class, 'index'])->middleware("auth")->name("show-report");
+Route::post("/submit-report", [SaleReportController::class, 'store'])->name("submit-sale-report");
+Route::post("/update-report", [SaleReportController::class, 'update'])->name("update-sale-report");
