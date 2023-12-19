@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sale_reports', function (Blueprint $table) {
             $table->id("report_ID");
-            $table->bigInteger("parti_ID")->references("parti_ID")->on("participants");
+            $table->foreignId("parti_ID")->references("parti_ID")->on("participants");
             $table->float("sales", 8, 2);
             $table->string("comment", 256);
             $table->timestamps();
