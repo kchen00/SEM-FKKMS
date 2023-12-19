@@ -11,6 +11,9 @@ class sale_report extends Model
     //specifying table primary key
     protected $primaryKey = "report_ID";
 
+    //specify the table for sale report
+    protected $table = "sale_reports";
+
     protected $fillable = [
         "parti_ID",
         "sales",
