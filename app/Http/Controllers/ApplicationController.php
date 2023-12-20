@@ -7,6 +7,7 @@ use App\Http\Requests\StoreapplicationRequest;
 use App\Http\Requests\UpdateapplicationRequest;
 use App\Models\kiosk;
 use App\Models\participant;
+use App\Models\rental;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -154,6 +155,16 @@ class ApplicationController extends Controller
     {
         $application = application::where('application_ID', $id)->first();
         $application->update($request->all());
+        if($application->status === 'accepted'){
+            // $kiosk = [
+            // ];
+            $application->status = 'on going';
+            $application->merge([
+                'kiosk_ID' => $request->kiosk,
+            ]);
+            $rental = rental::create($application->all());
+            // dd($kiosk);
+        }
         return redirect(route('application.adminManage'));
     }
 
