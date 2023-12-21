@@ -43,9 +43,6 @@ class DatabaseSeeder extends Seeder
         DB::table('participants')->insert([
             'user_ID' => '3',
         ]);
-        DB::table('participants')->insert([
-            'user_ID' => '3',
-        ]);
 
         DB::table('kiosks')->insert([
             'description' => 'left-wing no 1',

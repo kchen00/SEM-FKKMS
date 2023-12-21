@@ -16,4 +16,9 @@ class rental extends Model
         'startdate',
         'enddate',
     ];
+
+    public function kiosk()
+    {
+        return $this->belongsTo(Kiosk::class, 'kiosk_ID', 'kiosk_ID'); // Assuming 'Kiosk' is the model name for the kiosk table
+    }
 }

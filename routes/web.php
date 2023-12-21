@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
+| Here is where you can register web routes for your  These
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
@@ -25,6 +25,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SaleReportController;
 
 Route::get('/', function () {
@@ -39,17 +40,28 @@ Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('gues
 Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
 Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 Route::view('/dashboard', 'ManageUser.dashboard')->name('home')->middleware('auth');
-Route::get('/application/manage', [ApplicationController::class, 'index'])->middleware('auth')->name('application.manage');
-Route::get('/application/adminManage', [ApplicationController::class, 'adminManage'])->middleware('auth')->name('application.adminManage');
-Route::get('/application/create', [ApplicationController::class, 'create'])->middleware('auth')->name('application.create');
-Route::get('/application/edit/{id}', [ApplicationController::class, 'edit'])->middleware('auth')->name('application.edit');
-Route::get('/application/adminEdit/{id}', [ApplicationController::class, 'adminEdit'])->middleware('auth')->name('application.adminEdit');
-Route::post('/application/store', [ApplicationController::class, 'store'])->middleware('auth')->name('application.store');
-Route::post('/application/update/{id}', [ApplicationController::class, 'update'])->middleware('auth')->name('application.update');
-Route::post('/application/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->middleware('auth')->name('application.adminUpdate');
-Route::get('/application/show', [ApplicationController::class, 'show'])->middleware('auth')->name('application.show');
+Route::prefix('application')->name('application.')->group(function () {
+	Route::get('/manage', [ApplicationController::class, 'index'])->middleware('auth')->name('manage');
+	Route::get('/adminManage', [ApplicationController::class, 'adminManage'])->middleware('auth')->name('adminManage');
+	Route::get('/create', [ApplicationController::class, 'create'])->middleware('auth')->name('create');
+	Route::get('/edit/{id}', [ApplicationController::class, 'edit'])->middleware('auth')->name('edit');
+	Route::get('/adminEdit/{id}', [ApplicationController::class, 'adminEdit'])->middleware('auth')->name('adminEdit');
+	Route::post('/store', [ApplicationController::class, 'store'])->middleware('auth')->name('store');
+	Route::post('/update/{id}', [ApplicationController::class, 'update'])->middleware('auth')->name('update');
+	Route::post('/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
+	Route::get('/show', [ApplicationController::class, 'show'])->middleware('auth')->name('show');   
+});
+Route::prefix('rental')->name('application.')->group(function () {
+	Route::get('/', [RentalController::class, 'index'])->middleware('auth')->name('');
+	Route::get('/adminManage', [RentalController::class, 'adminManage'])->middleware('auth')->name('adminManage');
+	Route::get('/edit/{id}', [RentalController::class, 'edit'])->middleware('auth')->name('edit');
+	Route::get('/adminEdit/{id}', [RentalController::class, 'adminEdit'])->middleware('auth')->name('adminEdit');
+	Route::post('/update/{id}', [RentalController::class, 'update'])->middleware('auth')->name('update');
+	Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
+	Route::get('/show', [RentalController::class, 'show'])->middleware('auth')->name('show');
+});
+// Route::get('/rental', [RentalController::class, 'index'])->middleware('auth')->name('rental');
 Route::get('documents/{fileName}', [ApplicationController::class, 'displayFile'])->name('file.display');
-
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

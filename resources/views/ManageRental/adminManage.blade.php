@@ -16,13 +16,6 @@
                             </div>
                         </div>
                     </div>
-                    @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                            aria-label="Close"></button>
-                    </div>
-                @endif
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
                             <table class="table align-items-center mb-0">
@@ -43,7 +36,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($applications as $application)
+                                    @foreach($rentals as $rental)
                                     <tr>
                                         <td>
                                             <div class="d-flex px-2 py-1">
@@ -52,31 +45,25 @@
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center">
                                                     <h6 class="mb-0 text-sm">John Michael</h6>
-                                                    <p class="text-xs text-secondary mb-0">{{$application['description']}}</p>
+                                                    <p class="text-xs text-secondary mb-0">{{$rental['description']}}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{$application['created_at']}}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{$rental['created_at']}}</p>
                                             {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-success">{{$application['status']}}</span>
+                                            <span class="badge badge-sm bg-gradient-success">{{$rental['status']}}</span>
                                         </td>
                                         {{-- <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                                         </td> --}}
                                         <td class="align-middle text-center">
-                                            @if($application['status']==='accepted' || $application['status']==='rejected')
-                                            <span class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user" style="cursor: not-allowed;">
-                                                closed
-                                            </span>
-                                            @else
-                                            <a href="{{route('application.adminEdit', $application['application_ID'])}}" class="text-secondary font-weight-bold text-xs"
+                                            <a href="" class="text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
-                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach

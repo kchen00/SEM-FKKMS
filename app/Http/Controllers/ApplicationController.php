@@ -46,6 +46,9 @@ class ApplicationController extends Controller
         $applications = Application::where('parti_ID', $participant->parti_ID)
         ->whereIn('status', ['received', 'on reviewed'])
         ->get();
+        $rental = rental::where('parti_ID', $participant->parti_ID)
+        ->where('status', 'on going')
+        ->get();
         $kiosks = kiosk::where('rented',false)->get();
         if($applications->count()> 0)
         {
@@ -53,6 +56,9 @@ class ApplicationController extends Controller
         }
         elseif($kiosks->count() < 1){
             return redirect()->route('application.manage')->with('error', 'no available kiosk');
+        }
+        elseif($rental->count() > 0){
+            return redirect()->route('application.manage')->with('error', 'Already have on going rental');
         }
         else{
             return view('manageApplication.create');
@@ -125,7 +131,11 @@ class ApplicationController extends Controller
     public function edit(Request $request, $id)
     {
         //
-        $application = application::where('application_ID',$id)->first();
+        $application = application::find($id);
+        if($application->status != 'received')
+        {
+            return redirect(route('application.manage'))->with('error', 'application is already reviewed');
+        }
         return view('manageApplication.edit',compact('application'));
     }
     
@@ -133,11 +143,16 @@ class ApplicationController extends Controller
     {
         //
         $application = application::where('application_ID',$id)->first();
-        $status = [
-            'status' => 'on review'
-        ];
+        if($application->status === 'received'){
+            $status = [
+                'status' => 'on review'
+            ];
+            $application->update($status);
+        }
+        elseif($application->status != 'on review'){
+            return redirect(route('application.manage'))->with('error', 'application is already reviewed');
+        }
         $kiosks = kiosk::where('rented',false)->get();
-        $application->update($status);
         return view('manageApplication.adminEdit',compact('application','kiosks'));
     }
 
@@ -154,15 +169,25 @@ class ApplicationController extends Controller
     public function adminUpdate(Request $request, $id)
     {
         $application = application::where('application_ID', $id)->first();
+        if($application->status === 'accepted' || $application->status === 'rejected'){
+            // dd($application);
+            return redirect(route('application.adminManage'))->with('error', 'Application already reviewed');
+        }
+        // dd($application);
         $application->update($request->all());
         if($application->status === 'accepted'){
             // $kiosk = [
             // ];
-            $application->status = 'on going';
-            $application->merge([
+            $request['status'] = 'on going';
+            $request->merge([
                 'kiosk_ID' => $request->kiosk,
+                'parti_ID' => $application->parti_ID,
             ]);
-            $rental = rental::create($application->all());
+            $rental = rental::create($request->all());
+            $kiosk = kiosk::where('kiosk_ID', $rental->kiosk_ID)->first();
+            if ($kiosk) {
+                $kiosk->update(['rented' => true]);
+            }
             // dd($kiosk);
         }
         return redirect(route('application.adminManage'));
