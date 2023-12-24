@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\participant;
-use App\Http\Requests\StoreparticipantRequest;
-use App\Http\Requests\UpdateparticipantRequest;
+use App\Models\Participant;
+use App\Http\Requests\StoreParticipantRequest;
+use App\Http\Requests\UpdateParticipantRequest;
 
 class ParticipantController extends Controller
 {
@@ -27,7 +27,7 @@ class ParticipantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreparticipantRequest $request)
+    public function store(StoreParticipantRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class ParticipantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(participant $participant)
+    public function show(Participant $participant)
     {
         //
     }
@@ -43,7 +43,7 @@ class ParticipantController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(participant $participant)
+    public function edit(Participant $participant)
     {
         //
     }
@@ -51,7 +51,7 @@ class ParticipantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateparticipantRequest $request, participant $participant)
+    public function update(UpdateParticipantRequest $request, Participant $participant)
     {
         //
     }
@@ -59,7 +59,7 @@ class ParticipantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(participant $participant)
+    public function destroy(Participant $participant)
     {
         //
     }

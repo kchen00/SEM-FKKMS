@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class rental extends Model
+class Rental extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'rental_ID';
+    protected $primaryKey = "rentals_ID";
     protected $fillable = [
         'description',
         'status',
@@ -22,4 +22,12 @@ class rental extends Model
     {
         return $this->belongsTo(Kiosk::class, 'kiosk_ID', 'kiosk_ID'); // Assuming 'Kiosk' is the model name for the kiosk table
     }
+
+    
+
+    public function participant()
+    {
+        return $this->belongsTo(Participant::class, 'parti_ID');
+    }
+
 }
