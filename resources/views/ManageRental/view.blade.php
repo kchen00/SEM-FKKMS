@@ -14,7 +14,7 @@
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                             <p class="mb-0">Kiosk Rental</p>
                             <div class="d-flex align-items-center">
-                                <button class="btn btn-primary btn-sm mx-1" type="button" onclick="window.location=''">Edit</button>
+                                <button class="btn btn-primary btn-sm mx-1" type="button" onclick="window.location='{{route('rental.edit',$rental['rental_ID'])}}'">Edit</button>
                                 <button class="btn btn-success btn-sm mx-1" type="button" onclick="window.location=''">Payment</button>
                             </div>
                         </div>

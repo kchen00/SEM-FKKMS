@@ -10,12 +10,12 @@
             <div class="col-md-12">
                 <div class="card">
                     <form role="form" method="POST"
-                        action={{ route('application.adminUpdate', $application['application_ID']) }}
+                        action={{ route('rental.adminUpdate', $rental['rental_ID']) }}
                         enctype="multipart/form-data">
                         @csrf
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
-                                <p class="mb-0">Kiosk Application</p>
+                                <p class="mb-0">Kiosk rental</p>
                                 <button type="submit" class="btn btn-primary btn-sm ms-auto">Save</button>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1">Description</label>
-                                        <textarea class="form-control" name="description" rows="3">{{ old('description', $application['description']) }}</textarea>
+                                        <textarea class="form-control" name="description" rows="3">{{ old('description', $rental['description']) }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -62,7 +62,7 @@
                                     <div class="form-group">
                                         <label class="form-control-label">SSM</label>
                                         <input class="form-control" type="file" name="SSM"
-                                            value="{{ old('SSM', $application['SSM']) }}">
+                                            value="{{ old('SSM', $rental['SSM']) }}">
                                     </div>
                                 </div>
                                 <div class="form-group">

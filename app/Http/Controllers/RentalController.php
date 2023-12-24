@@ -31,7 +31,9 @@ class RentalController extends Controller
     public function adminManage()
     {
         $applications = Application::orderBy('created_at', 'desc')->get();
-        $rentals = rental::orderby('status')->get();
+        $rentals = Rental::orderByRaw("CASE WHEN status = 'on going' THEN 0 ELSE 1 END")
+        ->orderBy('rental_ID','desc')
+        ->get();
         return view('manageRental.adminManage', compact('applications','rentals'));
     }
 
@@ -68,23 +70,23 @@ class RentalController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         //
-        $application = application::where('application_ID', $id)->first();
-        return view('manageRental.edit', compact('application'));
+        // $participant = participant::where('user_ID', auth()->user()->user_ID)->first();
+        $rental = rental::find($id);
+        // dd($rental);
+        return view('manageRental.edit', compact('rental'));
+      
     }
 
-    public function adminEdit(Request $request, $id)
+    public function adminEdit($id)
     {
         //
-        $application = application::where('application_ID', $id)->first();
-        $status = [
-            'status' => 'on review'
-        ];
-        $kiosks = kiosk::where('rented', false)->get();
-        $application->update($status);
-        return view('manageRental.adminEdit', compact('application', 'kiosks'));
+        $rental = rental::find($id);
+        $kiosks = kiosk::where('rented',false)->get();
+        // dd($rental);
+        return view('manageRental.adminEdit', compact('rental','kiosks'));
     }
 
     /**
@@ -92,26 +94,12 @@ class RentalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $application = application::where('application_ID', $id)->first();
-        $application->update($request->all());
-        return redirect(route('application.manage'));
+       
     }
 
     public function adminUpdate(Request $request, $id)
     {
-        $application = application::where('application_ID', $id)->first();
-        $application->update($request->all());
-        if ($application->status === 'accepted') {
-            // $kiosk = [
-            // ];
-            $application->status = 'on going';
-            $application->merge([
-                'kiosk_ID' => $request->kiosk,
-            ]);
-            $rental = rental::create($application->all());
-            // dd($kiosk);
-        }
-        return redirect(route('application.adminManage'));
+        
     }
 
     /**

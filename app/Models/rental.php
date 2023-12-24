@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class rental extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'rental_ID';
     protected $fillable = [
         'description',
         'status',

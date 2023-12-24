@@ -51,7 +51,7 @@ Route::prefix('application')->name('application.')->group(function () {
 	Route::post('/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
 	Route::get('/show', [ApplicationController::class, 'show'])->middleware('auth')->name('show');   
 });
-Route::prefix('rental')->name('application.')->group(function () {
+Route::prefix('rental')->name('rental.')->group(function () {
 	Route::get('/', [RentalController::class, 'index'])->middleware('auth')->name('');
 	Route::get('/adminManage', [RentalController::class, 'adminManage'])->middleware('auth')->name('adminManage');
 	Route::get('/edit/{id}', [RentalController::class, 'edit'])->middleware('auth')->name('edit');

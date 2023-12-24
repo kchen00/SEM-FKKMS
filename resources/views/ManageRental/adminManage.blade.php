@@ -60,7 +60,7 @@
                                             <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                                         </td> --}}
                                         <td class="align-middle text-center">
-                                            <a href="" class="text-secondary font-weight-bold text-xs"
+                                            <a href="{{route('rental.adminEdit',$rental['rental_ID'])}}" class="text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
