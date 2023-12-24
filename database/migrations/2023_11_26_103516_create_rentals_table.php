@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id("rentals_ID");
             $table->string("description", 256);
             $table->enum("status", ["on going", "teminated"]);
-            $table->foreignId("parti_ID")->references("parti_ID")->on("participants");
-            $table->foreignId("kiosk_ID")->references("kiosk_ID")->on("kiosks");
+            $table->foreignId("parti_ID")->references("parti_ID")->on("participants")->nullable();
+            $table->foreignId("kiosk_ID")->references("kiosk_ID")->on("kiosks")->nullable();
             $table->timestamp("startdate")->nullable();
             $table->timestamp("enddate")->nullable();
-            $table->bigInteger("payment_ID")->references("payment_ID")->on("payments");
             $table->timestamps();
         });
     }

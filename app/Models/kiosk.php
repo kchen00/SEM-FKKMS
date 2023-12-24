@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Kiosk extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'kiosk_ID';
+    protected $fillable = [
+        'description',
+        'rented',
+    ];
 }
