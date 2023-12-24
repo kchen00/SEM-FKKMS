@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class sale_report extends Model
+class Sale_report extends Model
 {
     use HasFactory;
     //specifying table primary key
