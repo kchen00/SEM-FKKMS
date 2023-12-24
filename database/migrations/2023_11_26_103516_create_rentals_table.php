@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rentals', function (Blueprint $table) {
-            $table->id("rental_ID");
-            $table->string("description", 256)->nullable();
-            $table->enum("status", ["on going", "teminated"])->nullable();
-            $table->bigInteger("parti_ID")->references("parti_ID")->on("pariticipants")->nullable();
-            $table->bigInteger("kiosk_ID")->references("kiosk_ID")->on("kiosks")->nullable();
+            $table->id("rentals_ID");
+            $table->string("description", 256);
+            $table->enum("status", ["on going", "teminated"]);
+            $table->foreignId("parti_ID")->references("parti_ID")->on("participants")->nullable();
+            $table->foreignId("kiosk_ID")->references("kiosk_ID")->on("kiosks")->nullable();
             $table->timestamp("startdate")->nullable();
             $table->timestamp("enddate")->nullable();
-            // $table->bigInteger("payment_ID")->references("payment_ID")->on("payments")->nullable();
             $table->timestamps();
         });
     }

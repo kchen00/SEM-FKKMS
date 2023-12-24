@@ -1,23 +1,6 @@
 {{-- inteface for pupuk admin to select which kiosk sale report to view --}}
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
-@php
-    // hardcoded variable values, remove when doing controller
-    $kiosk_id_owner = array(
-        (object)["id" => "123", "name" => "James"],
-        (object)["id" => "456", "name" => "Sarah"],
-        (object)["id" => "789", "name" => "John"],
-        (object)["id" => "246", "name" => "Emily"],
-        (object)["id" => "135", "name" => "Michael"],
-        (object)["id" => "579", "name" => "Emma"],
-        (object)["id" => "802", "name" => "Olivia"],
-        (object)["id" => "375", "name" => "William"],
-        (object)["id" => "987", "name" => "Sophia"],
-        (object)["id" => "642", "name" => "Alexander"]
-    );
-
-
-@endphp
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Select a KIOSK'])
 
@@ -35,27 +18,27 @@
                     </thead>
                     <tbody>
                         {{-- dynamically generate table rows --}}
-                        @for ($i = 0; $i < count($kiosk_id_owner); $i++)
+                        @foreach($kiosk_id_owner as $kioskId => $data)
                             <tr>
                                 <!-- KIOSK ID column-->
                                 <td class="align-middle text-left">
-                                    <p class="text-xs font-weight-bold text-uppercase mb-0 ">{{  $kiosk_id_owner[$i] -> id }}</p>
+                                    <p class="text-xs font-weight-bold text-uppercase mb-0">{{ $kioskId }}</p>
                                 </td>
-
+                        
                                 <!-- KIOSK owner column -->
                                 <td class="align-middle text-left">
-                                    <p class="text-xs font-weight-bold mb-0">{{  $kiosk_id_owner[$i] -> name }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $data['username'] }}</p>
                                 </td>
-
+                        
                                 <!-- action column -->
                                 <td class="align-middle text-left">
-                                    <a href="{{ route('show-report')}}" class="btn btn-primary active" role="button" aria-pressed="true">
+                                    <a href="{{ route('admin-show-report', ["participant_id"=>$data['parti_id'], "kiosk_id"=>$kioskId, "kiosk_owner"=>$data['username']]) }}" class="btn btn-primary active" role="button" aria-pressed="true">
                                         <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
                                         <span class="btn-inner--text">View</span>
                                     </a>
                                 </td>
                             </tr>
-                        @endfor
+                        @endforeach                     
                     </tbody>
                 </table>
             </div>

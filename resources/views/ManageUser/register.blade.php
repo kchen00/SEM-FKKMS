@@ -38,7 +38,7 @@
                                 <!-- phone number input -->
                                 <div class="flex flex-col mb-3">
                                     <input type="text" name="phone_num" class="form-control" placeholder="Phone number" aria-label="Phone" value="{{ old('phone_num') }}" >
-                                    @error('phone_number') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                                    @error('phone_num') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
                                 </div>
 
                                 <!-- password input -->

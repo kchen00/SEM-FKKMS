@@ -27,6 +27,8 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SaleReportController;
+use App\Models\Participant;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
 	return redirect('/dashboard');
@@ -75,4 +77,22 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //manage sales report routes
-Route::get("/show-report", [SaleReportController::class, 'index'])->middleware("auth")->name("show-report");
+Route::get("/show-kiosk", [SaleReportController::class, 'show_kiosk'])
+	->middleware("auth")
+	->name("show-kiosk");
+
+Route::get("/show-report", [SaleReportController::class, 'index'])
+	->middleware("auth")
+	->name("show-report");
+
+Route::get('/admin-show-report/{participant_id}/{kiosk_id}/{kiosk_owner}', [SaleReportController::class, 'admin_index'])
+    ->middleware('auth')
+    ->name('admin-show-report');
+
+Route::post("/submit-report", [SaleReportController::class, 'store'])
+	->name("submit-sale-report");
+
+Route::post("/update-report", [SaleReportController::class, 'update'])
+	->name("update-sale-report");
+
+Route::post("/add-comment", [SaleReportController::class, "add_comment"])->name("add-comment");
