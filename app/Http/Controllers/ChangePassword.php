@@ -21,7 +21,7 @@ class ChangePassword extends Controller
 
     public function show()
     {
-        return view('auth.change-password');
+        return view('ManageUser.change-password');
     }
 
     public function update(Request $request)
@@ -37,7 +37,9 @@ class ChangePassword extends Controller
             $existingUser->update([
                 'password' => $attributes['password']
             ]);
-            return redirect('login');
+            
+            Auth::logout();
+            return redirect()->route("login");
         } else {
             return back()->with('error', 'Your email does not match the email who requested the password change');
         }
