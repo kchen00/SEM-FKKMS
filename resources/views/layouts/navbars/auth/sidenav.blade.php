@@ -49,7 +49,7 @@
             <!-- manage KIOSK side nav -->
             @if ($role == "student" or $role == "vendor" or $role == "admin")
             <li class="nav-item">
-                <a class="nav-link {{ str_contains(request()->url(), 'user-management') == true ? 'active' : '' }}" href="">
+                <a class="nav-link {{ Route::currentRouteName() == 'manage-kiosk' ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-basket text-dark text-sm opacity-10"></i>
                     </div>
@@ -61,11 +61,24 @@
             <!-- manage complaints side nav -->
             @if ($role == "student" or $role == "vendor" or $role == "tech_team")
             <li class="nav-item">
-                <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="">
+                <a class="nav-link {{ Route::currentRouteName() == 'manage-complaint' ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-chat-round text-dark text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Manage Complaints</span>
+                </a>
+            </li>
+            @endif
+
+
+            <!-- add user side nav -->
+            @if ($role == "admin")
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == 'admin-add-user' ? 'active' : '' }}" href="{{ route('admin-add-user') }}">
+                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-chat-round text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Add New User</span>
                 </a>
             </li>
             @endif

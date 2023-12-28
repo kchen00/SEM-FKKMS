@@ -24,8 +24,9 @@
     @endif  
 
     <div class="row">
+        {{-- manage kiosk --}}
         @if ((($role == "student" or $role == "vendor") and $has_kiosk) or $role == "admin")
-        <div class="card card-blog col m-4 move-on-hover">
+        <div class="card card-blog col m-4">
             <div class="position-relative mt-4 fluid">
                 <a class="d-block blur-shadow-image">
                     <img src="/img/carousel-1.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg">
@@ -38,8 +39,9 @@
         </div>        
         @endif
 
+        {{-- manage report --}}
         @if ((($role == "student" or $role == "vendor") and $has_kiosk) or $role == "pp_admin")
-        <div class="card card-blog col m-4 move-on-hover">
+        <div class="card card-blog col m-4">
             <div class="position-relative mt-4">
                 <a class="d-block blur-shadow-image">
                     <img src="/img/carousel-2.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg">
@@ -52,8 +54,9 @@
         </div>   
         @endif 
 
+        {{-- manage complaint --}}
         @if ((($role == "student" or $role == "vendor") and $has_kiosk) or $role == "tech_team")
-        <div class="card card-blog col m-4 move-on-hover">
+        <div class="card card-blog col m-4">
             <div class="position-relative mt-4">
                 <a class="d-block blur-shadow-image">
                     <img src="/img/carousel-3.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg">
@@ -64,8 +67,23 @@
                 <p class="card-description mb-4">Manage your complaint here.</p>
             </div>
         </div>
+        @endif
+        
+        {{-- admin add new user --}}
+        @if($role == "admin")
+        <div class="card card-blog col m-4">
+            <div class="position-relative mt-4">
+                <a href="{{ route('admin-add-user') }}" class="d-block blur-shadow-image">
+                    <img src="/img/carousel-3.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg">
+                </a>
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn bg-gradient-primary mt-3">Add new user</button>
+                <p class="card-description mb-4">Add new admin, PUPUK admin, FK bursary, FK technical team account</p>
+            </div>
+        </div>
+        @endif
     </div>
-    @endif
 
 </div> 
 @include('layouts.footers.auth.footer')
