@@ -64,5 +64,13 @@ class DatabaseSeeder extends Seeder
             'description' => 'left-wing no 3',
             'rented' => false,
         ]);
+        DB::table('fee_rates')->insert([
+            'amount' => 100,
+            'type' => 'student',
+        ]);
+        DB::table('fee_rates')->insert([
+            'amount' => 120,
+            'type' => 'vendor',
+        ]);
     }
 }

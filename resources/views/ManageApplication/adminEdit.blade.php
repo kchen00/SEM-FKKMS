@@ -25,14 +25,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Username</label>
-                                        <input class="form-control" type="text" name="username"
+                                        <input disabled class="form-control" type="text" name="username"
                                             value="{{ old('username', auth()->user()->username) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Email address</label>
-                                        <input class="form-control" type="email" name="email"
+                                        <input disabled class="form-control" type="email" name="email"
                                             value="{{ old('email', auth()->user()->email) }}">
                                     </div>
                                 </div>
@@ -43,26 +43,33 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1">Description</label>
-                                        <textarea class="form-control" name="description" rows="3">{{ old('description', $application['description']) }}</textarea>
+                                        <textarea class="form-control" name="description" rows="3" disabled value="{{$application['description']}}">{{ old('description', $application['description']) }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">Start Date</label>
-                                        <input class="form-control" type="date" name="startdate" value="">
+                                        <input class="form-control" type="date" name="startdate" value="{{ date('Y-m-d', strtotime($application['startdate']))}}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">End Date</label>
-                                        <input class="form-control" type="date" name="enddate" value="">
+                                        <input class="form-control" type="date" name="enddate" value="{{ date('Y-m-d', strtotime($application['enddate'])) }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">SSM</label>
-                                        <input class="form-control" type="file" name="SSM"
-                                            value="{{ old('SSM', $application['SSM']) }}">
+                                        <div class="row">
+                                            @if ($application['SSM'])
+                                                    <a class="btn btn-primary"
+                                                        href="{{ route('file.display', ['fileName' => $application['SSM']]) }}"
+                                                        target="_blank">View File</a>
+                                                @endif
+                                        </div>
+                                        {{-- <input class="form-control" type="file" name="SSM"
+                                            value="{{ old('SSM', $application['SSM']) }}"> --}}
                                     </div>
                                 </div>
                                 <div class="form-group">

@@ -11,9 +11,9 @@
                             <div class="col">
                                 <h6>Applications</h6>
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <button class="btn btn-success" type="button" onclick="window.location='{{ route('application.create') }}'">Button</button>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @if (session('error'))
@@ -72,11 +72,15 @@
                                                 closed
                                             </span>
                                             @else
-                                            <a href="{{route('application.adminEdit', $application['application_ID'])}}" class="text-secondary font-weight-bold text-xs"
+                                            <a href="{{route('application.adminEdit', $application['application_ID'])}}" class="btn btn-info"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                             @endif
+                                            <a href="{{route('application.adminEdit', $application['application_ID'])}}" class="btn btn-success"
+                                                data-toggle="tooltip" data-original-title="Edit user">
+                                                view
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach

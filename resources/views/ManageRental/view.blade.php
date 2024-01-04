@@ -13,10 +13,12 @@
                         @csrf
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                             <p class="mb-0">Kiosk Rental</p>
+                            @if($rental)
                             <div class="d-flex align-items-center">
-                                <button class="btn btn-primary btn-sm mx-1" type="button" onclick="window.location='{{route('rental.edit',$rental['rental_ID'])}}'">Edit</button>
+                                <button class="btn btn-primary btn-sm mx-1" type="button" onclick="window.location='{{route('rental.edit',$rental['rentals_ID'])}}'">Edit</button>
                                 <button class="btn btn-success btn-sm mx-1" type="button" onclick="window.location=''">Payment</button>
                             </div>
+                            @endif
                         </div>
                         
                         
@@ -66,18 +68,30 @@
                                         <label class="form-control">{{$rental->Kiosk->description}}</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">SSM</label>
                                         <input class="form-control" type="file" name="SSM">
                                     </div>
+                                </div> --}}
+                                <div class="col-md-4">
+                                    {{-- <div class="form-group">
+                                        <label class="form-control-label">SSM</label>
+                                        <input class="form-control" type="file" name="SSM"
+                                            value="{{ old('SSM', $rental['SSM']) }}">
+                                    </div> --}}
+                                    @if ($rental['SSM'])
+                                        <a class="btn btn-primary"
+                                            href="{{ route('file.display', ['fileName' => $rental['SSM']]) }}"
+                                            target="_blank">View File</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                         @else
                         <div class="card-body">
 
-                            hello world
+                            No On Going Rental, please make an application or wait for application approval
                         </div>
                         @endif
                     </form>

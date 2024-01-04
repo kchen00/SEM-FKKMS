@@ -25,6 +25,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\FeeController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SaleReportController;
 use App\Models\Participant;
@@ -62,6 +63,8 @@ Route::prefix('rental')->name('rental.')->group(function () {
 	Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
 	Route::get('/show', [RentalController::class, 'show'])->middleware('auth')->name('show');
 });
+Route::get('/fee', [FeeController::class, 'edit'])->middleware('auth')->name('fee');
+Route::post('/fee/update', [FeeController::class, 'update'])->middleware('auth')->name('fee.update');
 // Route::get('/rental', [RentalController::class, 'index'])->middleware('auth')->name('rental');
 Route::get('documents/{fileName}', [ApplicationController::class, 'displayFile'])->name('file.display');
 

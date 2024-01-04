@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <form role="form" method="POST"
-                        action={{ route('rental.adminUpdate', $rental['rental_ID']) }}
+                        action={{ route('rental.adminUpdate', $rental['rentals_ID']) }}
                         enctype="multipart/form-data">
                         @csrf
                         <div class="card-header pb-0">
@@ -49,13 +49,13 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">Start Date</label>
-                                        <input class="form-control" type="date" name="startdate" value="">
+                                        <input class="form-control" type="date" name="startdate" value="{{date('Y-m-d', strtotime($rental['startdate']))}}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">End Date</label>
-                                        <input class="form-control" type="date" name="enddate" value="">
+                                        <input class="form-control" type="date" name="enddate" value="{{date('Y-m-d', strtotime($rental['enddate']))}}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -68,9 +68,9 @@
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1">Select Option</label>
                                     <select class="form-control" name="status" id="statusSelect">
-                                        <option disabled selected>Select status</option>
-                                        <option value="rejected">Reject</option>
-                                        <option value="accepted">Accept</option>
+                                        {{-- <option disabled selected>Select status</option> --}}
+                                        <option value="on going"  {{ $rental['status'] == 'on going' ? 'selected' : '' }}>on going</option>
+                                        <option value="terminated"  {{$rental['status'] == 'terminated' ? 'selected' : '' }}>terminate</option>
                                         <!-- Add more options as needed -->
                                     </select>
                                 </div>

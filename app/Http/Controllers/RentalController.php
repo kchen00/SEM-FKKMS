@@ -23,7 +23,9 @@ class RentalController extends Controller
         //
         $participant = participant::where('user_ID', auth()->user()->user_ID)->first();
         $rental = rental::with('kiosk')
-        ->where('parti_ID', $participant['parti_ID'])->first();
+        ->where('parti_ID', $participant['parti_ID'])
+        ->where('status', 'on going')
+        ->first();
         // dd($rental);
         return view('manageRental.view', compact('rental'));
     }
@@ -32,7 +34,7 @@ class RentalController extends Controller
     {
         $applications = Application::orderBy('created_at', 'desc')->get();
         $rentals = Rental::orderByRaw("CASE WHEN status = 'on going' THEN 0 ELSE 1 END")
-        ->orderBy('rental_ID','desc')
+        ->orderBy('rentals_ID','desc')
         ->get();
         return view('manageRental.adminManage', compact('applications','rentals'));
     }

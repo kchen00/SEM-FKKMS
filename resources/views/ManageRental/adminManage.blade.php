@@ -9,10 +9,11 @@
                     <div class="card-header pb-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6>Applications</h6>
+                                <h6>Rentals</h6>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-success" type="button" onclick="window.location='{{ route('application.create') }}'">Button</button>
+                                <button class="btn btn-success" type="button"
+                                    onclick="window.location='{{ route('fee') }}'">Manage Fee</button>
                             </div>
                         </div>
                     </div>
@@ -22,7 +23,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Application</th>
+                                            Rental</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Date Apply</th>
@@ -36,41 +37,49 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($rentals as $rental)
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1">
+                                    @foreach ($rentals as $rental)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="/img/team-2.jpg" class="avatar avatar-sm me-3"
+                                                            alt="user1">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">John Michael</h6>
+                                                        <p class="text-xs text-secondary mb-0">{{ $rental['description'] }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">John Michael</h6>
-                                                    <p class="text-xs text-secondary mb-0">{{$rental['description']}}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{$rental['created_at']}}</p>
-                                            {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-success">{{$rental['status']}}</span>
-                                        </td>
-                                        {{-- <td class="align-middle text-center">
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $rental['created_at'] }}</p>
+                                                {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span
+                                                    class="badge badge-sm bg-gradient-success">{{ $rental['status'] }}</span>
+                                            </td>
+                                            {{-- <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                                         </td> --}}
-                                        <td class="align-middle text-center">
-                                            <a href="{{route('rental.adminEdit',$rental['rental_ID'])}}" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
-                                        </td>
-                                    </tr>
+                                            <td class="align-middle text-center">
+                                                <a href="{{ route('rental.adminEdit', $rental['rentals_ID']) }}"
+                                                    class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
+                                                    data-original-title="Edit user">
+                                                    Edit
+                                                </a>
+                                            </td>
+                                        </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                         </div>
+                        @if (@empty($vendors))
+                            <div class="text-center">
+                                no records on rental
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
