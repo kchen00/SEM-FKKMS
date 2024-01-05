@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id("payment_ID");
-            $table->string("payment_proof",256);
-            $table->enum("status", ["accepted", "rejected"]);
+            $table->foreignId("parti_ID");
+            $table->string("payment_proof",256)->nullable();
+            $table->enum("status", ["accepted", "rejected","received","on review"]);
             //note left by bursary if the pyament is rejected
             $table->string("notes", 256)->nullable(true);
+            $table->string("feedback", 256)->nullable(true);
+            $table->float("amount")->nullable(true);
             $table->timestamps();
         });
     }

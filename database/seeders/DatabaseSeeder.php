@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +47,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('kiosks')->insert([
             'description' => 'left-wing no 1',
-            'rented' => false,
+            'rented' => true,
         ]);
         DB::table('kiosks')->insert([
             'description' => 'right-wing no 1',
@@ -71,6 +72,14 @@ class DatabaseSeeder extends Seeder
         DB::table('fee_rates')->insert([
             'amount' => 120,
             'type' => 'vendor',
+        ]);
+        DB::table('rentals')->insert([
+            'description' => 'sell karipap',
+            'status' => 'on going',
+            'parti_ID' => '1',
+            'kiosk_ID' => '1',
+            'startdate' => Carbon::now(),
+            'enddate' => Carbon::now()->addDays(5)
         ]);
     }
 }

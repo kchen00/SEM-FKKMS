@@ -96,7 +96,9 @@ class RentalController extends Controller
      */
     public function update(Request $request, $id)
     {
-       
+       $rental = rental::find($id);
+       $rental->update($request->all());
+       return redirect(route('rental'));
     }
 
     public function adminUpdate(Request $request, $id)

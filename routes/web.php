@@ -26,6 +26,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\FeeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SaleReportController;
 use App\Models\Participant;
@@ -43,25 +44,39 @@ Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('gues
 Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
 Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 Route::view('/dashboard', 'ManageUser.dashboard')->name('home')->middleware('auth');
+
 Route::prefix('application')->name('application.')->group(function () {
 	Route::get('/manage', [ApplicationController::class, 'index'])->middleware('auth')->name('manage');
 	Route::get('/adminManage', [ApplicationController::class, 'adminManage'])->middleware('auth')->name('adminManage');
-	Route::get('/create', [ApplicationController::class, 'create'])->middleware('auth')->name('create');
 	Route::get('/edit/{id}', [ApplicationController::class, 'edit'])->middleware('auth')->name('edit');
 	Route::get('/adminEdit/{id}', [ApplicationController::class, 'adminEdit'])->middleware('auth')->name('adminEdit');
-	Route::post('/store', [ApplicationController::class, 'store'])->middleware('auth')->name('store');
 	Route::post('/update/{id}', [ApplicationController::class, 'update'])->middleware('auth')->name('update');
 	Route::post('/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
-	Route::get('/show', [ApplicationController::class, 'show'])->middleware('auth')->name('show');   
+	Route::get('/show/{id}', [ApplicationController::class, 'show'])->middleware('auth')->name('show');   
+	Route::get('/create', [ApplicationController::class, 'create'])->middleware('auth')->name('create');
+	Route::post('/store', [ApplicationController::class, 'store'])->middleware('auth')->name('store');
 });
-Route::prefix('rental')->name('rental.')->group(function () {
+
+Route::prefix('rental')->name('rental')->group(function () {
 	Route::get('/', [RentalController::class, 'index'])->middleware('auth')->name('');
-	Route::get('/adminManage', [RentalController::class, 'adminManage'])->middleware('auth')->name('adminManage');
-	Route::get('/edit/{id}', [RentalController::class, 'edit'])->middleware('auth')->name('edit');
-	Route::get('/adminEdit/{id}', [RentalController::class, 'adminEdit'])->middleware('auth')->name('adminEdit');
-	Route::post('/update/{id}', [RentalController::class, 'update'])->middleware('auth')->name('update');
-	Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
-	Route::get('/show', [RentalController::class, 'show'])->middleware('auth')->name('show');
+	Route::get('/adminManage', [RentalController::class, 'adminManage'])->middleware('auth')->name('.adminManage');
+	Route::get('/edit/{id}', [RentalController::class, 'edit'])->middleware('auth')->name('.edit');
+	Route::get('/adminEdit/{id}', [RentalController::class, 'adminEdit'])->middleware('auth')->name('.adminEdit');
+	Route::post('/update/{id}', [RentalController::class, 'update'])->middleware('auth')->name('.update');
+	Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->middleware('auth')->name('.adminUpdate');
+	Route::get('/show', [RentalController::class, 'show'])->middleware('auth')->name('.show');
+});
+
+Route::prefix('payment')->name('payment')->group(function () {
+	Route::get('/', [PaymentController::class, 'index'])->middleware('auth')->name('');
+	Route::get('/create', [PaymentController::class, 'create'])->middleware('auth')->name('.create');
+	Route::post('/store', [PaymentController::class, 'store'])->middleware('auth')->name('.store');
+	Route::get('/bursaryManage', [PaymentController::class, 'bursaryManage'])->middleware('auth')->name('.bursaryManage');
+	Route::get('/edit/{id}', [PaymentController::class, 'edit'])->middleware('auth')->name('.edit');
+	Route::get('/adminEdit/{id}', [PaymentController::class, 'adminEdit'])->middleware('auth')->name('.adminEdit');
+	Route::post('/update/{id}', [PaymentController::class, 'update'])->middleware('auth')->name('.update');
+	Route::post('/adminUpdate/{id}', [PaymentController::class, 'adminUpdate'])->middleware('auth')->name('.adminUpdate');
+	Route::get('/show', [PaymentController::class, 'show'])->middleware('auth')->name('.show');
 });
 Route::get('/fee', [FeeController::class, 'edit'])->middleware('auth')->name('fee');
 Route::post('/fee/update', [FeeController::class, 'update'])->middleware('auth')->name('fee.update');

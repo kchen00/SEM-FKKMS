@@ -16,7 +16,7 @@
                             @if($rental)
                             <div class="d-flex align-items-center">
                                 <button class="btn btn-primary btn-sm mx-1" type="button" onclick="window.location='{{route('rental.edit',$rental['rentals_ID'])}}'">Edit</button>
-                                <button class="btn btn-success btn-sm mx-1" type="button" onclick="window.location=''">Payment</button>
+                                <button class="btn btn-success btn-sm mx-1" type="button" onclick="window.location='{{route('payment')}}'">Payment</button>
                             </div>
                             @endif
                         </div>
@@ -29,13 +29,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Username</label>
-                                        <input class="form-control" type="text" name="username" value="{{ old('username', auth()->user()->username) }}">
+                                        <input class="form-control" disabled type="text" name="username" value="{{ old('username', auth()->user()->username) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Email address</label>
-                                        <input class="form-control" type="email" name="email" value="{{ old('email', auth()->user()->email) }}">
+                                        <input class="form-control" disabled type="email" name="email" value="{{ old('email', auth()->user()->email) }}">
                                     </div>
                                 </div>
                             </div>
@@ -45,27 +45,27 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1">Description</label>
-                                        <label class="form-control">{{$rental['description']}}</label>
+                                        <label class="form-control-plaintext" >{{$rental['description']}}</label>
                                         {{-- <textarea class="form-control" name="description" rows="3"></textarea> --}}
                                       </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Start Date</label>
-                                        <label class="form-control">{{$rental['startdate']}}</label>
+                                        <label class="form-control-plaintext">{{$rental['startdate']}}</label>
                                         {{-- <input class="form-control" type="date"  name="startdate"> --}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">End Date</label>
-                                        <label class="form-control">{{$rental['enddate']}}</label>
+                                        <label class="form-control-plaintext">{{$rental['enddate']}}</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Kiosk</label>
-                                        <label class="form-control">{{$rental->Kiosk->description}}</label>
+                                        <label class="form-control-plaintext">{{$rental->Kiosk->description}}</label>
                                     </div>
                                 </div>
                                 {{-- <div class="col-md-6">
