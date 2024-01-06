@@ -29,7 +29,7 @@ class SaleReportController extends Controller
             $view_year = date('Y'); // Get the current year
         }
         
-        $sales_data = $this->show($participant_id, $view_year);
+        $sales_data = $this->show($participant_id);
 
         return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
     }
@@ -47,7 +47,7 @@ class SaleReportController extends Controller
             $view_year = date('Y'); // Get the current year
         }
 
-        $sale_data = $this->show($participant_id, $view_year);
+        $sale_data = $this->show($participant_id);
 
 
         return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
@@ -111,10 +111,9 @@ class SaleReportController extends Controller
     /**
      * get the sale report of the participant
      */
-    public function show(int $parti_ID, int $view_year)
+    public function show(int $parti_ID)
     {
-        $salesReports = Sale_report::where('parti_ID', $parti_ID)
-                        ->whereYear('created_at', $view_year)                
+        $salesReports = Sale_report::where('parti_ID', $parti_ID)            
                         ->get();
         return $salesReports;
     }
