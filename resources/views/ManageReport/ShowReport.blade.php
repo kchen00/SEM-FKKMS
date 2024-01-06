@@ -62,27 +62,38 @@
         <!-- display the sales chart -->
         <div class="card m-2">
             <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
-                <div class="row">
-                    {{-- infor for pupuk admin, hide when the user is participant --}}
-                    @if($role == "pp_admin")
-                    <div class="col-sm"><span>KIOSK ID:  {{  $kiosk_id  }}</span></div>
-                    <div class="col-sm"><span>KIOSK Owner:  {{  $kiosk_owner  }}</span></div>
-                    @endif
-                    {{-- sort sales dropdown options --}}
-                    <div class="col-sm">
-                        <span>
-                            <div class="d-flex justify-content-end mb-3">
-                                <div class="dropdown">
-                                    <button class="btn bg-gradient-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Sort by
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="#">Monthly</a></li>
-                                        <li><a class="dropdown-item" href="#">Yearly</a></li>
-                                    </ul>
+                <div class="container">
+                    <div class="row">
+                        @if($role == "pp_admin")
+                            {{-- infor for pupuk admin, hide when the user is participant --}}
+                            <div class="col"> 
+                                <p class="text-start">KIOSK ID:  {{  $kiosk_id  }}</p>
+                                <p class="text-start">KIOSK Owner:  {{  $kiosk_owner  }}</p>
+                            </div>
+                        @endif
+                        <div class="col">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="number" class="form-control my-auto" id="viewYear" placeholder="2023" value="2023">
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-primary" onclick="location.reload()">Filter sales</button>
+                                    </div>
                                 </div>
-                            </div> 
-                        </span>
+                            </div>
+                        </div>
+                        <div class="col position-relative">
+                            <div class="dropdown position-absolute top-0 end-0">
+                                <button class="btn bg-gradient-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort by
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#" onclick="sort_by_month()">Monthly</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="sort_by_year()">Yearly</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,134 +107,144 @@
         <!-- table for sales entry -->
         <div class="card">
             <div class="table-responsive">
-                <table class="table align-items-center mb-0">
+                <table class="table align-items-center mb-0" id="salesTable">
                     <thead>
                         <tr>
+                            @php
+                                $colspan = 5;
+                            @endphp
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Month</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date Added</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date Edited</th>
-                            @if($role == "student"||$role == "vendor")<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Actions</th>@endif
+                            @if($role == "student"||$role == "vendor")
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Actions</th>
+                                @php
+                                    $colspan = 6;
+                                @endphp
+                            @endif
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sales</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Comments by PUPUK admin</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- for loop to create rows dynamically --}}
-                        @foreach ($sales_data as $month => $sale)
-                            <tr>                         
-                                <!-- month column -->
-                                <td class="align-middle text-left">
-                                    <p class="text-xs font-weight-bold text-uppercase mb-0 ">{{ $month }}</p>
-                                </td>
-                    
-                            @if($sale->isNotEmpty())
-                                <!-- date added column -->
-                                <td class="align-middle text-left">
-                                    @php
-                                        $formattedDate = Carbon::parse($sale[0]->created_at)->format('d/m/Y');
-                                    @endphp
-                                    <p class="text-xs font-weight-bold mb-0">{{ $formattedDate }}</p>
-                                </td>
-
-                                <!-- date edited column -->
-                                <td class="align-middle text-left">
-                                    @php
-                                        $formattedDate = Carbon::parse($sale[0]->updated_at)->format('d/m/Y');
-                                    @endphp
-                                    <p class="text-xs font-weight-bold mb-0">{{  $formattedDate }}</p>
-                                </td>
-                                
-                                <!-- action column when there is sale data-->
-                                @if($role == "student" || $role == "vendor")
-                                <td class="action_column align-middle text-left">
-                                    <div class="action_buttons_div">
-                                        <button class="btn btn-icon btn-3 btn-secondary" type="button" onclick="display_form(this)" data-toggle="tooltip" data-placement="bottom" title="Edit sales data">
-                                            <span class="btn-inner--icon"><i class="fa fa-pencil"></i></span>
-                                            <span class="btn-inner--text">Edit</span>
-                                        </button>
+                        @if($sales_data->isEmpty())
+                            <tr id="noSaleReport">
+                                <td colspan="{{ $colspan }}">
+                                    <div class="alert alert-danger text-light text-center" role="alert">
+                                        @if($role=="admin"||$role=="pp_admin")
+                                            <p class="text-center">There are no sales reports for this user.</p>
+                                        @elseif($role=="student"||$role=="vendor")
+                                            <p class="text-center">You have not yet enter a sale report, please add one</p>
+                                            <button type="button" class="btn btn-success" id="addSaleReport">Add new sale report</button>
+                                        @endif
                                     </div>
-                                    <div class="sale_form_div form-group" style="display: none;">
-                                        <form action="{{ route('update-sale-report') }}" method="POST">
-                                            @csrf
-                                            <input type="text" name="report_ID" hidden value="{{ $sale[0]->report_ID }}">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="{{  number_format($sale[0]->sales,2) }}">
+                                </td>
+                            </tr>
+                        @else
+                            @foreach ($sales_data as $sale)
+                                <tr>
+                                    {{-- month column --}}
+                                    <td class="align-middle text-left">
+                                        <p class="text-xs font-weight-bold mb-0 text-upper"> {{ $sale->created_at->format('F') }}</p>
+                                    </td>
+                                    {{-- date added --}}
+                                    <td class="align-middle text-left">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $sale->created_at->toDateString() }}</p>
+                                    </td>
+                                    {{-- date edited--}}
+                                    <td class="align-middle text-left">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $sale->updated_at->toDateString() }}</p>
+                                    </td>
+                                    {{-- if the user if participant, allow edit sales data --}}
+                                    @if($role == "student" || $role == "vendor")
+                                        <td>
+                                            <div class="action_buttons_div">
+                                                <button class="btn btn-icon btn-3 btn-secondary edit-btn" type="button" data-toggle="tooltip" data-placement="bottom" title="Edit sales data">
+                                                    <span class="btn-inner--icon"><i class="fa fa-pencil"></i></span>
+                                                    <span class="btn-inner--text">Edit</span>
+                                                </button>
+                                            </div>
+                                            <div class="edit-form-div" style="display: none;">
+                                                <form action="{{ route('update-sale-report') }}" method="POST">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="RM{{  number_format($sale->sales,2)  }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="datetime-local" class="form-control" name="date" value="{{ now()->format('Y-m-d\TH:i:s') }}" hidden>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </form>
                                             </div>
-                                            <div class="row">
-                                                {{-- date picker --}}
-                                                <div class="col-md-6" >
-                                                    <div class="form-group">
-                                                        <input type="date" class="form-control" name="date" placeholder="Date" value={{$sale[0]->created_at}} disabled data-toggle="tooltip" data-placement="bottom" title="You cannot edit the date created">
-                                                    </div>
+                                        </td>
+                                    @endif
+                                        {{-- sales column --}}
+                                        <td class="align-middle">
+                                            <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->sales,2) }}</p>
+                                        </td>
+                                        {{-- pupuk admin comment columns --}}
+                                        <td class="action_column align-middle text-left">
+                                            @if ($role == "student" or $role == "vendor")
+                                            {{-- if user is participant, show the comment --}}
+                                                <div>
+                                                    @if(empty($sale->comment))
+                                                        <p>No comment yet</p>
+                                                    @else
+                                                        <p>{{ $sale->comment }}</p>
+                                                        <div class="author align-items-center">
+                                                            <div class="name ps-3">
+                                                                <div class="stats">
+                                                                    <small>Posted on {{  $sale->comment_at  }}</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif 
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
-                                                    </div>
+                                            @elseif ($role == "pp_admin")
+                                            {{-- if role is pupuk, show a form to submit comment --}}
+                                                <div>
+                                                    <form action="{{ route('add-comment') }}" method="POST">
+                                                        @csrf
+                                                        <div class="form-group">
+                                                            <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
+                                                            <textarea class="form-control" id="pp_comment" rows="3" placeholder="Leave your comment here" name="pp_comment">{{  $sale->comment  }}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input class="btn btn-icon btn-3 btn-primary" type="submit" value='Submit comment'>
+                                                        </div>  
+                                                    </form>                 
                                                 </div>
-                                            </div>
-                                        </form>                                    
-                                    </div>
-                                </td>
-                                @endif
-                                <!-- sales column -->
-                                <td class="align-middle">
-                                    <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale[0]->sales,2) }}</p>
-                                </td>
-                                {{-- pupuk admin comment columns --}}
-                                <td class="action_column align-middle text-left">
-                                    @if ($role == "student" or $role == "vendor")
-                                    {{-- if user is participant, show the comment --}}
-                                    <div>
-                                        <p>{{ $sale[0]->comment }}</p>
-                                        <div class="author align-items-center">
-                                            <div class="name ps-3">
-                                                <div class="stats">
-                                                    <small>Posted on {{  $sale[0]->comment_at  }}</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                        
-                                    @elseif($role == "pp_admin")
-                                    {{-- if user is pupuk admin show a form to submit comment --}}
-                                    <div>
-                                        <form action="{{ route('add-comment') }}" method="POST">
-                                            @csrf
-                                            <div class="form-group">
-                                                <input type="text" name="report_ID" hidden value="{{ $sale[0]->report_ID }}">
-                                                <textarea class="form-control" id="pp_comment" rows="3" placeholder="Leave your comment here" name="pp_comment">{{  $sale[0]->comment  }}</textarea>
-                                            </div>
-                                            <input class="btn btn-icon btn-3 btn-primary" type="submit">
-                                        </form>                 
-                                    </div>      
-                                    @endif            
-                                </td>
-                            @else
-                                <!-- date added column -->
-                                <td class="align-middle text-left">
-                                    <p class="text-xs font-weight-bold mb-0"></p>
-                                </td>
-
-                                <!-- date edited column -->
-                                <td class="align-middle text-left">
-                                    <p class="text-xs font-weight-bold mb-0"></p>
-                                </td>
-                                
-                                <!-- action column when there is no sale data-->
-                                @if($role == "student" || $role == "vendor")
-                                <td class="action_column align-middle text-left">
-                                    <div class="action_buttons_div">
-                                        <button class="btn btn-icon btn-3 btn-primary add_button" type="button" onclick="display_form(this)" data-toggle="tooltip" data-placement="bottom" title="Add new sales data">
-                                            <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
-                                            <span class="btn-inner--text">Add</span>
-                                        </button>
-                                    </div>
-                                    <div class="sale_form_div form-group" style="display: none;">
+                                            @endif            
+                                        </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        @isset($lastSale)
+                            @php
+                                $lastSale = $sales_data->last();
+                                $lastSaleDate = \Carbon\Carbon::parse($lastSale->created_at);
+                                $currentDate = \Carbon\Carbon::now();
+                            @endphp
+                            @if($lastSaleDate->lessThan($currentDate->startOfMonth()))
+                                <tr id="newSaleReportRow">
+                                    <td class="align-middle text-left">
+                                        <p class="text-xs font-weight-bold mb-0 text-upper">{{ now()->format('F') }}</p>
+                                    </td> <!-- Month name of current date -->
+                                    <td class="align-middle text-left">
+                                        <p class="text-xs font-weight-bold mb-0">{{ now()->toDateString() }}</p>
+                                    </td> <!-- Current date -->
+                                    <td></td> <!-- Empty column -->
+                                    <td></td> <!-- Empty column -->
+                                    <td>
                                         <form action="{{ route('submit-sale-report') }}" method="POST">
                                             @csrf
                                             <div class="row">
@@ -231,33 +252,20 @@
                                                     <div class="form-group">
                                                         <input type="text" class="form-control" name="sale_input" placeholder="RM0.00">
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                {{-- date picker --}}
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="date" class="form-control" name="date" placeholder="Date" required data-toggle="tooltip" data-placement="bottom" title="Choose date created"> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
                                                     </div>
+                                                    <div class="form-group">
+                                                        <input type="datetime-local" class="form-control" name="date" value="{{ now()->format('Y-m-d\TH:i:s') }}" hidden>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </form>                                    
-                                    </div>
-                                </td>
-                                @endif
-
-                                <!-- sales column -->
-                                <td class="align-middle">
-                                    <p class="text-xs font-weight-bold mb-0">There is no sale data in record, please add one.</p>
-                                </td>
-                            @endif
-                        </tr>
-                        @endforeach
+                                        </form>
+                                    </td>
+                                    <td></td> <!-- Empty column -->
+                                </tr>
+                            @endif    
+                        @endisset
                     </tbody>
                 </table>
             </div>
@@ -268,23 +276,67 @@
 @endsection
 
 @push('js')
+{{-- bar chart script --}}
 <script>
-    let months = [];
-    let sales = []
-    sales_data_chart = {!! json_encode($sales_data) !!};
+    salesData = {!! json_encode($sales_data) !!};
 
-    for (const key in sales_data_chart) {
-        if (Object.prototype.hasOwnProperty.call(sales_data_chart, key)) {
-            months.push(key);
-            if (sales_data_chart[key][0]) {
-                sales.push(sales_data_chart[key][0]["sales"])
-            }
-            else {
-                sales.push(0);
+    // Function to group sales figures by month name
+    function groupSalesFiguresByMonthName(salesData) {
+        const groupedSalesFigures = {};
 
+        // Filter sales data for the year 
+        const salesDataYear = salesData.filter(sale => {
+            const date = new Date(sale.created_at);
+            return date.getFullYear() === parseInt(document.getElementById('viewYear').value);
+        });
+
+        // Group sales figures by month name for the year 2023
+        salesDataYear.forEach(sale => {
+            const date = new Date(sale.created_at);
+            const monthName = date.toLocaleString('default', { month: 'long' }); // Get month name
+
+            if (!groupedSalesFigures[monthName]) {
+                groupedSalesFigures[monthName] = 0;
             }
-        }
+
+            groupedSalesFigures[monthName] += sale.sales;
+        });
+
+        return groupedSalesFigures;
     }
+
+    function getTotalSalesPerYear(data) {
+        const salesPerYear = {};
+
+        data.forEach(item => {
+            const year = new Date(item.created_at).getFullYear();
+
+            if (!salesPerYear[year]) {
+                salesPerYear[year] = 0;
+            }
+
+            salesPerYear[year] += item.sales;
+        });
+
+        return salesPerYear;
+    }
+
+    // Group the sales figures by year
+    const totalSalesPerYear = getTotalSalesPerYear(salesData);
+    
+    // Group the sales figures by month name
+    const groupedSalesFiguresByMonthName = groupSalesFiguresByMonthName(salesData);
+
+    // Log the grouped sales data (for demonstration)
+    console.log(groupedSalesFiguresByMonthName);
+
+    // Extracting month names and sales figures from the object
+    const month = Object.keys(groupedSalesFiguresByMonthName); // Array of month names
+    const month_sale = Object.values(groupedSalesFiguresByMonthName); // Array of sales figures
+    
+    // Extracting year and sales figures from the object
+    const year = Object.keys(totalSalesPerYear); // Array of year
+    const year_sale = Object.values(totalSalesPerYear); // Array of sales figures
 
     var ctx1 = document.getElementById("bar-chart").getContext("2d");
 
@@ -293,100 +345,155 @@
     gradientStroke1.addColorStop(1, 'rgba(251, 99, 64, 0.2)');
     gradientStroke1.addColorStop(0.2, 'rgba(251, 99, 64, 0.0)');
     gradientStroke1.addColorStop(0, 'rgba(251, 99, 64, 0)');
-    new Chart(ctx1, {
-        type: "bar",
-        data: {
-            labels: months,
-            datasets: [{
-                label: "Sales  ",
-                tension: 0.4,
-                borderWidth: 0,
-                pointRadius: 0,
-                borderColor: "#fb6340",
-                backgroundColor: gradientStroke1,
-                borderWidth: 3,
-                fill: true,
-                data: sales,
-                maxBarThickness: 50
 
-            }],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false,
-                }
+    let sale_chart = null;
+    function createChart(labels, data) {
+        if (sale_chart) {
+            sale_chart.destroy(); // Destroy the existing chart if it exists
+        }
+        sale_chart = new Chart(ctx1, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Sales  ",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    borderColor: "#fb6340",
+                    backgroundColor: gradientStroke1,
+                    borderWidth: 3,
+                    fill: true,
+                    data: data,
+                    maxBarThickness: 50
+
+                }],
             },
-            interaction: {
-                intersect: false,
-                mode: 'index',
-            },
-            scales: {
-                y: {
-                    grid: {
-                        drawBorder: false,
-                        display: true,
-                        drawOnChartArea: true,
-                        drawTicks: false,
-                        borderDash: [5, 5]
-                    },
-                    ticks: {
-                        display: true,
-                        padding: 10,
-                        color: '#fbfbfb',
-                        font: {
-                            size: 11,
-                            family: "Open Sans",
-                            style: 'normal',
-                            lineHeight: 2
-                        },
-                    }
-                },
-                x: {
-                    grid: {
-                        drawBorder: false,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
                         display: false,
-                        drawOnChartArea: false,
-                        drawTicks: false,
-                        borderDash: [5, 5]
-                    },
-                    ticks: {
-                        display: true,
-                        color: '#ccc',
-                        padding: 20,
-                        font: {
-                            size: 11,
-                            family: "Open Sans",
-                            style: 'normal',
-                            lineHeight: 2
-                        },
                     }
                 },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            padding: 10,
+                            color: '#fbfbfb',
+                            font: {
+                                size: 11,
+                                family: "Open Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#ccc',
+                            padding: 20,
+                            font: {
+                                size: 11,
+                                family: "Open Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
             },
-        },
-    });
+        });
+    }
+
+    function sort_by_year() {
+        createChart(year, year_sale);
+    }
+
+    function sort_by_month() {
+        createChart(month, month_sale);
+    }
+
+    // default view sort by month
+    sort_by_month()
 </script>
 <script>
-    previous_button = null
-    function display_form(button) {
-        // if there is previous form clicked, hide it
-        if (previous_button) {
-            var action_column= previous_button.closest('.action_column');
-            var action_buttons_div = action_column.querySelector(".action_buttons_div")
-            var form_div = action_column.querySelector('.sale_form_div');
-            
-            action_buttons_div.style.display = 'block'; // show the Add button
-            form_div.style.display = 'none'; // hide the form 
-        }
-        previous_button = button
-        var action_column= button.closest('.action_column');
-        var action_buttons_div = action_column.querySelector(".action_buttons_div")
-        var form_div = action_column.querySelector('.sale_form_div');
-        
-        action_buttons_div.style.display = 'none'; // Hide the Add button
-        form_div.style.display = 'block'; // Show the form 
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const addSaleReportBtn = document.getElementById('addSaleReport');
+        const noSaleReport = document.getElementById('noSaleReport');
+        const salesTableBody = document.querySelector('#salesTable tbody');
+
+        addSaleReportBtn.addEventListener('click', function() {
+            noSaleReport.style.display = 'none';
+            const newRow = `
+                <tr id="newSaleReportRow">
+                    <td>{{ now()->format('F') }}</td> <!-- Month name of current date -->
+                    <td>{{ now()->toDateString() }}</td> <!-- Current date -->
+                    <td></td> <!-- Empty column -->
+                    <td></td> <!-- Empty column -->
+                    <td>
+                        <form action="{{ route('submit-sale-report') }}" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="sale_input" placeholder="RM0.00">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="datetime-local" class="form-control" name="date" value="{{ now()->format('Y-m-d\TH:i:s') }}" hidden>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    <td></td> <!-- Empty column -->
+                </tr>
+            `;
+
+            // Append the new row to the table body
+            salesTableBody.insertAdjacentHTML('beforeend', newRow);
+        });
+    });
+</script>
+{{-- replace edit button with edit form --}}
+<script>
+    $(document).ready(function() {
+        $('.edit-btn').click(function() {
+            $(this).closest('.action_buttons_div').hide();
+            $(this).closest('td').find('.edit-form-div').show();
+        });
+
+        $('.edit-form').submit(function(event) {
+            event.preventDefault();
+            // Handle form submission here (e.g., update data via AJAX)
+            // After handling the submission, you might want to hide the form again
+            $(this).closest('.edit-form-div').hide();
+            $(this).closest('td').find('.action_buttons_div').show();
+        });
+    });
 </script>
 @endpush

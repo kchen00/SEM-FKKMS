@@ -96,25 +96,8 @@ class SaleReportController extends Controller
      */
     public function show(int $parti_ID)
     {
-        $sale_data = [];
-
-        // Fetch sales data for each month from January to December
-        for ($i = 1; $i <= 12; $i++) {
-            $month = str_pad($i, 2, '0', STR_PAD_LEFT); // Format month with leading zero
-            $date = Carbon::create(null, $i, 1); // Create Carbon instance for the month
-
-            // Fetch sales data for the current month
-            $sales = sale_report::where('parti_ID', $parti_ID)
-                ->whereMonth('created_at', $month)
-                ->get();
-            
-            
-            // Store sales data for the month in the $salesData array
-            $sale_data[$date->format('F')] = $sales; // Use month name as array key
-        }
-
-
-        return $sale_data;
+        $salesReports = Sale_report::where('parti_ID', $parti_ID)->get();
+        return $salesReports;
     }
 
     // function to retreive KISOK id and KIOSK owner from the database
@@ -161,7 +144,7 @@ class SaleReportController extends Controller
      */
     public function edit(sale_report $sale_report)
     {
-        dd($sale_report);
+ 
     }
 
     /**
@@ -172,7 +155,6 @@ class SaleReportController extends Controller
         $report = sale_report::findOrFail($request["report_ID"]);
         // Update the sale data
         $report->sales = $request->input('sale_input');
-        // Update other fields as needed
 
         $report->save();
         return redirect()->route('show-report');
