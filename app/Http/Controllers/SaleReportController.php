@@ -16,24 +16,41 @@ use function PHPUnit\Framework\isEmpty;
 class SaleReportController extends Controller
 {
     // show the sale report to participants
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::getUser();
         $role = $user->role;
         $participant_id = $this->get_participant_ID();
+        
+        $view_year = $request->view_year;
+        
+        // Check if $request->view_year is not set or empty
+        if (!$view_year) {
+            $view_year = date('Y'); // Get the current year
+        }
+        
+        $sales_data = $this->show($participant_id, $view_year);
 
-        return view('ManageReport.ShowReport', ['role' => $role, 'sales_data' => $this->show($participant_id), 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
+        return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
     }
 
     // show the sale report to pupuk admin of selected participant
-    public function admin_index(int $participant_id, string $kiosk_id, string $kiosk_owner)
+    public function admin_index(Request $request, int $participant_id, string $kiosk_id, string $kiosk_owner)
     {
+        
         $user = Auth::getUser();
         $role = $user->role;
 
-        $sale_data = $this->show($participant_id);
+        $view_year = $request->view_year;
+        // Check if $request->view_year is not set or empty
+        if (!$view_year) {
+            $view_year = date('Y'); // Get the current year
+        }
 
-        return view('ManageReport.ShowReport', ['role' => $role, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
+        $sale_data = $this->show($participant_id, $view_year);
+
+
+        return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
     }
 
     public function get_total_sales(int $partiID) {
@@ -94,9 +111,11 @@ class SaleReportController extends Controller
     /**
      * get the sale report of the participant
      */
-    public function show(int $parti_ID)
+    public function show(int $parti_ID, int $view_year)
     {
-        $salesReports = Sale_report::where('parti_ID', $parti_ID)->get();
+        $salesReports = Sale_report::where('parti_ID', $parti_ID)
+                        ->whereYear('created_at', $view_year)                
+                        ->get();
         return $salesReports;
     }
 

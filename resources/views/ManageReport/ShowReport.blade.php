@@ -8,7 +8,6 @@
 @php
     use Carbon\Carbon;
     $role = Auth::user()->role;
-
 @endphp
 @push("js")
     <script src="/assets/js/plugins/chartjs.min.js"></script>
@@ -73,14 +72,20 @@
                         @endif
                         <div class="col">
                             <div class="container">
-                                <div class="row">
-                                    <div class="col">
-                                        <input type="number" class="form-control my-auto" id="viewYear" placeholder="2023" value="2023">
+                                @if($role == 'student'||$role == 'vendor')
+                                    <form method="GET" action="{{ route('show-report') }}">
+                                @else
+                                    <form method="GET" action="{{ route('admin-show-report', ['participant_id' => $participant_id, 'kiosk_id' => $kiosk_id, 'kiosk_owner' => $kiosk_owner]) }}">
+                                @endif
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="number" name="view_year" class="form-control my-auto" id="viewYear" placeholder="Year" value="{{ $view_year }}">
+                                        </div>
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-primary">Filter sales</button>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <button type="button" class="btn btn-primary" onclick="location.reload()">Filter sales</button>
-                                    </div>
-                                </div>
+                                </form>                                
                             </div>
                         </div>
                         <div class="col position-relative">
@@ -142,90 +147,92 @@
                             </tr>
                         @else
                             @foreach ($sales_data as $sale)
-                                <tr>
-                                    {{-- month column --}}
-                                    <td class="align-middle text-left">
-                                        <p class="text-xs font-weight-bold mb-0 text-upper"> {{ $sale->created_at->format('F') }}</p>
-                                    </td>
-                                    {{-- date added --}}
-                                    <td class="align-middle text-left">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $sale->created_at->toDateString() }}</p>
-                                    </td>
-                                    {{-- date edited--}}
-                                    <td class="align-middle text-left">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $sale->updated_at->toDateString() }}</p>
-                                    </td>
-                                    {{-- if the user if participant, allow edit sales data --}}
-                                    @if($role == "student" || $role == "vendor")
-                                        <td>
-                                            <div class="action_buttons_div">
-                                                <button class="btn btn-icon btn-3 btn-secondary edit-btn" type="button" data-toggle="tooltip" data-placement="bottom" title="Edit sales data">
-                                                    <span class="btn-inner--icon"><i class="fa fa-pencil"></i></span>
-                                                    <span class="btn-inner--text">Edit</span>
-                                                </button>
-                                            </div>
-                                            <div class="edit-form-div" style="display: none;">
-                                                <form action="{{ route('update-sale-report') }}" method="POST">
-                                                    @csrf
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <div class="form-group">
-                                                                <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="RM{{  number_format($sale->sales,2)  }}">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <input type="datetime-local" class="form-control" name="date" value="{{ now()->format('Y-m-d\TH:i:s') }}" hidden>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                @if($sale->created_at->format('Y') == $view_year)
+                                    <tr>
+                                        {{-- month column --}}
+                                        <td class="align-middle text-left">
+                                            <p class="text-xs font-weight-bold mb-0 text-upper"> {{ $sale->created_at->format('F') }}</p>
                                         </td>
-                                    @endif
-                                        {{-- sales column --}}
-                                        <td class="align-middle">
-                                            <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->sales,2) }}</p>
+                                        {{-- date added --}}
+                                        <td class="align-middle text-left">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $sale->created_at->toDateString() }}</p>
                                         </td>
-                                        {{-- pupuk admin comment columns --}}
-                                        <td class="action_column align-middle text-left">
-                                            @if ($role == "student" or $role == "vendor")
-                                            {{-- if user is participant, show the comment --}}
-                                                <div>
-                                                    @if(empty($sale->comment))
-                                                        <p>No comment yet</p>
-                                                    @else
-                                                        <p>{{ $sale->comment }}</p>
-                                                        <div class="author align-items-center">
-                                                            <div class="name ps-3">
-                                                                <div class="stats">
-                                                                    <small>Posted on {{  $sale->comment_at  }}</small>
+                                        {{-- date edited--}}
+                                        <td class="align-middle text-left">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $sale->updated_at->toDateString() }}</p>
+                                        </td>
+                                        {{-- if the user if participant, allow edit sales data --}}
+                                        @if($role == "student" || $role == "vendor")
+                                            <td>
+                                                <div class="action_buttons_div">
+                                                    <button class="btn btn-icon btn-3 btn-secondary edit-btn" type="button" data-toggle="tooltip" data-placement="bottom" title="Edit sales data">
+                                                        <span class="btn-inner--icon"><i class="fa fa-pencil"></i></span>
+                                                        <span class="btn-inner--text">Edit</span>
+                                                    </button>
+                                                </div>
+                                                <div class="edit-form-div" style="display: none;">
+                                                    <form action="{{ route('update-sale-report') }}" method="POST">
+                                                        @csrf
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="RM{{  number_format($sale->sales,2)  }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="datetime-local" class="form-control" name="date" value="{{ now()->format('Y-m-d\TH:i:s') }}" hidden>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @endif 
+                                                    </form>
                                                 </div>
-                                            @elseif ($role == "pp_admin")
-                                            {{-- if role is pupuk, show a form to submit comment --}}
-                                                <div>
-                                                    <form action="{{ route('add-comment') }}" method="POST">
-                                                        @csrf
-                                                        <div class="form-group">
-                                                            <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
-                                                            <textarea class="form-control" id="pp_comment" rows="3" placeholder="Leave your comment here" name="pp_comment">{{  $sale->comment  }}</textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input class="btn btn-icon btn-3 btn-primary" type="submit" value='Submit comment'>
-                                                        </div>  
-                                                    </form>                 
-                                                </div>
-                                            @endif            
-                                        </td>
-                                </tr>
+                                            </td>
+                                        @endif
+                                            {{-- sales column --}}
+                                            <td class="align-middle">
+                                                <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->sales,2) }}</p>
+                                            </td>
+                                            {{-- pupuk admin comment columns --}}
+                                            <td class="action_column align-middle text-left">
+                                                @if ($role == "student" or $role == "vendor")
+                                                {{-- if user is participant, show the comment --}}
+                                                    <div>
+                                                        @if(empty($sale->comment))
+                                                            <p>No comment yet</p>
+                                                        @else
+                                                            <p>{{ $sale->comment }}</p>
+                                                            <div class="author align-items-center">
+                                                                <div class="name ps-3">
+                                                                    <div class="stats">
+                                                                        <small>Posted on {{  $sale->comment_at  }}</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif 
+                                                    </div>
+                                                @elseif ($role == "pp_admin")
+                                                {{-- if role is pupuk, show a form to submit comment --}}
+                                                    <div>
+                                                        <form action="{{ route('add-comment') }}" method="POST">
+                                                            @csrf
+                                                            <div class="form-group">
+                                                                <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
+                                                                <textarea class="form-control" id="pp_comment" rows="3" placeholder="Leave your comment here" name="pp_comment">{{  $sale->comment  }}</textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input class="btn btn-icon btn-3 btn-primary" type="submit" value='Submit comment'>
+                                                            </div>  
+                                                        </form>                 
+                                                    </div>
+                                                @endif            
+                                            </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         @endif
                         @isset($lastSale)
