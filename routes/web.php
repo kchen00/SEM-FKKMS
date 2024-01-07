@@ -73,10 +73,10 @@ Route::prefix('payment')->name('payment')->group(function () {
 	Route::post('/store', [PaymentController::class, 'store'])->middleware('auth')->name('.store');
 	Route::get('/bursaryManage', [PaymentController::class, 'bursaryManage'])->middleware('auth')->name('.bursaryManage');
 	Route::get('/edit/{id}', [PaymentController::class, 'edit'])->middleware('auth')->name('.edit');
-	Route::get('/adminEdit/{id}', [PaymentController::class, 'adminEdit'])->middleware('auth')->name('.adminEdit');
+	Route::get('/bursaryEdit/{id}', [PaymentController::class, 'bursaryEdit'])->middleware('auth')->name('.bursaryEdit');
 	Route::post('/update/{id}', [PaymentController::class, 'update'])->middleware('auth')->name('.update');
-	Route::post('/adminUpdate/{id}', [PaymentController::class, 'adminUpdate'])->middleware('auth')->name('.adminUpdate');
-	Route::get('/show', [PaymentController::class, 'show'])->middleware('auth')->name('.show');
+	Route::post('/bursaryUpdate/{id}', [PaymentController::class, 'bursaryUpdate'])->middleware('auth')->name('.bursaryUpdate');
+	Route::get('/show/{id}', [PaymentController::class, 'show'])->middleware('auth')->name('.show');
 });
 Route::get('/fee', [FeeController::class, 'edit'])->middleware('auth')->name('fee');
 Route::post('/fee/update', [FeeController::class, 'update'])->middleware('auth')->name('fee.update');

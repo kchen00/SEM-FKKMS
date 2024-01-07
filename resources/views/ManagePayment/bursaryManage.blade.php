@@ -52,7 +52,7 @@
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center">
                                                     <h6 class="mb-0 text-sm">{{$payment->participant->user->username}}</h6>
-                                                    <p class="text-xs text-secondary mb-0">{{$payment['notes']}}</p>
+                                                    <p class="text-xs text-secondary mb-0">RM {{$payment['amount']}}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -72,15 +72,15 @@
                                                 closed
                                             </span>
                                             @else
-                                            <a href="{{route('payment.adminEdit', $payment['payment_ID'])}}" class="btn btn-info"
+                                            <a href="{{route('payment.bursaryEdit', $payment['payment_ID'])}}" class="btn btn-info"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                             @endif
-                                            <a href="{{route('payment.adminEdit', $payment['payment_ID'])}}" class="btn btn-success"
+                                            {{-- <a href="{{route('payment.adminEdit', $payment['payment_ID'])}}" class="btn btn-success"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 view
-                                            </a>
+                                            </a> --}}
                                         </td>
                                     </tr>
                                     @endforeach

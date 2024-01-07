@@ -9,13 +9,12 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <form role="form" method="POST"
-                        action={{ route('application.adminUpdate', $application['application_ID']) }}
+                    <form role="form" method="POST" action={{ route('payment.bursaryUpdate', $payment['payment_ID']) }}
                         enctype="multipart/form-data">
                         @csrf
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
-                                <p class="mb-0">Kiosk Application</p>
+                                <p class="mb-0">Kiosk payment</p>
                                 <button type="submit" class="btn btn-primary btn-sm ms-auto">Save</button>
                             </div>
                         </div>
@@ -38,38 +37,46 @@
                                 </div>
                             </div>
                             <hr class="horizontal dark">
-                            <p class="text-uppercase text-sm">Kiosk Information</p>
+                            <p class="text-uppercase text-sm">Payment Information</p>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleFormControlTextarea1">Description</label>
-                                        <textarea class="form-control" name="description" rows="3" disabled value="{{$application['description']}}">{{ old('description', $application['description']) }}</textarea>
+                                        <label for="exampleFormControlTextarea1">Note</label>
+                                        <textarea class="form-control" name="notes" rows="3" disabled value="{{ $payment['notes'] }}">{{ old('notes', $payment['notes']) }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1">Feedback</label>
+                                        <textarea class="form-control" name="feedback" rows="3" ></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-control-label">Start Date</label>
-                                        <input class="form-control" type="date" name="startdate" value="{{ date('Y-m-d', strtotime($application['startdate']))}}" disabled>
+                                        <label class="form-control-label">Amount</label>
+                                        <input class="form-control"  name="amount"
+                                            value="RM {{$payment['amount']}}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-control-label">End Date</label>
-                                        <input class="form-control" type="date" name="enddate" value="{{ date('Y-m-d', strtotime($application['enddate'])) }}" disabled>
+                                        <label class="form-control-label">Payment Date</label>
+                                        <input class="form-control" type="date" name="created_at"
+                                            value="{{ date('Y-m-d', strtotime($payment['created_at'])) }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-control-label">SSM</label>
+                                        <label class="form-control-label">Payment Proof</label>
                                         <div class="row">
-                                            @if ($application['SSM'])
-                                                    <a class="btn btn-primary"
-                                                        href="{{ route('file.display', ['fileName' => $application['SSM']]) }}"
-                                                        target="_blank">View File</a>
-                                                @endif
+                                            @if ($payment['payment_proof'])
+                                                <a class="btn btn-primary"
+                                                    href="{{ route('file.display', ['fileName' => $payment['payment_proof']]) }}"
+                                                    target="_blank">View File</a>
+                                            @endif
                                         </div>
                                         {{-- <input class="form-control" type="file" name="SSM"
-                                            value="{{ old('SSM', $application['SSM']) }}"> --}}
+                                            value="{{ old('SSM', $payment['SSM']) }}"> --}}
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -84,12 +91,7 @@
                                 <div class="form-group" id="kioskSelect" style="display: none;">
                                     <label>Kiosks</label>
 
-                                    <select class="form-control" name="kiosk" required>
-                                        <option disabled selected value="">Select Kiosk</option>
-                                        @foreach ($kiosks as $kiosk)
-                                            <option value="{{ $kiosk['kiosk_ID'] }}">{{ $kiosk['description'] }}</option>
-                                        @endforeach
-                                    </select>
+
                                 </div>
 
                                 <script>

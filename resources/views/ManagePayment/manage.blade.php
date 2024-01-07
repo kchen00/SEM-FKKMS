@@ -46,7 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Payment</th>
+                                            Amount</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Date Apply</th>
@@ -69,9 +69,7 @@
                                                             alt="user1">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">John Michael</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            {{ $payment['description'] }}</p>
+                                                        <h6 class="mb-0 text-sm">RM {{$payment['amount']}}</h6>
                                                     </div>
                                                 </div>
                                             </td>
@@ -88,20 +86,22 @@
                                             <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                                         </td> --}}
                                             <td class="align-middle text-center">
-                                                <a class="btn btn-info"
+                                                {{-- <a class="btn btn-info"
                                                     href="{{ route('payment.edit', $payment['payment_ID']) }}"
                                                     class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
                                                     data-original-title="Edit user">
                                                     Edit
-                                                </a>
-                                                <a class="btn btn-success" href=""
+                                                </a> --}}
+                                                <a class="btn btn-success" href="{{route('payment.show', $payment['payment_ID'])}}"
                                                     class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
                                                     data-original-title="Edit user">
                                                     View
                                                 </a>
+                                                @if ($payment['payment_proof']) 
                                                 <a class="btn btn-primary"
-                                                    @if ($payment['SSM']) href="{{ route('file.display', ['fileName' => $payment['SSM']]) }}" @endif
+                                                    href="{{ route('file.display', ['fileName' => $payment['payment_proof']]) }}" 
                                                     target="_blank">View File</a>
+                                                    @endif
                                             </td>
                                         </tr>
                                     @endforeach
