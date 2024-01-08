@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Tables'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Application'])
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -77,8 +77,15 @@
                                                     data-original-title="Edit user">
                                                     Edit
                                                 </a>
+                                                <a class="btn btn-success" href="{{route('application.show', $application['application_ID'])}}"
+                                                    class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
+                                                    data-original-title="Edit user">
+                                                    View
+                                                </a>
                                                 <a class="btn btn-primary"
-                                                    {{-- href="{{ route('file.display', ['fileName' => $application['SSM']]) }}" --}}
+                                                @if($application['SSM'])
+                                                href="{{ route('file.display', ['fileName' => $application['SSM']]) }}"
+                                                @endif
                                                     target="_blank">View File</a>
                                             </td>
                                         </tr>

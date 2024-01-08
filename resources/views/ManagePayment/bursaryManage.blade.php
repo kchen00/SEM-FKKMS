@@ -9,10 +9,10 @@
                     <div class="card-header pb-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6>Applications</h6>
+                                <h6>payments</h6>
                             </div>
                             {{-- <div class="col-auto">
-                                <button class="btn btn-success" type="button" onclick="window.location='{{ route('application.create') }}'">Button</button>
+                                <button class="btn btn-success" type="button" onclick="window.location='{{ route('payment.create') }}'">Button</button>
                             </div> --}}
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Application</th>
+                                            payment</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Date Apply</th>
@@ -43,7 +43,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($applications as $application)
+                                    @foreach($payments as $payment)
                                     <tr>
                                         <td>
                                             <div class="d-flex px-2 py-1">
@@ -51,36 +51,36 @@
                                                     <img src="/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1">
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">John Michael</h6>
-                                                    <p class="text-xs text-secondary mb-0">{{$application['description']}}</p>
+                                                    <h6 class="mb-0 text-sm">{{$payment->participant->user->username}}</h6>
+                                                    <p class="text-xs text-secondary mb-0">RM {{$payment['amount']}}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{$application['created_at']}}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{$payment['created_at']}}</p>
                                             {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-success">{{$application['status']}}</span>
+                                            <span class="badge badge-sm bg-gradient-success">{{$payment['status']}}</span>
                                         </td>
                                         {{-- <td class="align-middle text-center">
                                             <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                                         </td> --}}
                                         <td class="align-middle text-center">
-                                            @if($application['status']==='accepted' || $application['status']==='rejected')
+                                            @if($payment['status']==='accepted' || $payment['status']==='rejected')
                                             <span class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user" style="cursor: not-allowed;">
                                                 closed
                                             </span>
                                             @else
-                                            <a href="{{route('application.adminEdit', $application['application_ID'])}}" class="btn btn-info"
+                                            <a href="{{route('payment.bursaryEdit', $payment['payment_ID'])}}" class="btn btn-info"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                             @endif
-                                            <a href="{{route('application.show', $application['application_ID'])}}" class="btn btn-success"
+                                            {{-- <a href="{{route('payment.adminEdit', $payment['payment_ID'])}}" class="btn btn-success"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 view
-                                            </a>
+                                            </a> --}}
                                         </td>
                                     </tr>
                                     @endforeach
