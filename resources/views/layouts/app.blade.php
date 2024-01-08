@@ -19,6 +19,7 @@
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -28,38 +29,28 @@
     @endguest
 
     @auth
-        @if (in_array(request()->route()->getName(), ['sign-in-static', 'sign-up-static', 'login', 'register', 'recover-password', 'rtl', 'virtual-reality']))
-            @yield('content')
-        @else
-            @php
-                $userRole = Auth::user()->role; // Get the user's role
-                $bgColor = '';
+        @php
+            $userRole = Auth::user()->role; // Get the user's role
+            $bgColor = '';
 
-                // Set different background colors based on user roles
-                switch($userRole) {
-                    case 'student':
-                        $bgColor = 'bg-primary'; // Set the background color for student
-                        break;
-                    case 'vendor':
-                        $bgColor = 'bg-success'; // Set the background color for outside vendor
-                        break;
-                    default:
-                        $bgColor = 'bg-info'; // Default background color for admins    
-                        break;
-                }
-            @endphp
-            @if (!in_array(request()->route()->getName(), ['profile', 'profile-static']))
-                <div class="min-height-300 {{ $bgColor }} position-absolute w-100"></div>
-            @elseif (in_array(request()->route()->getName(), ['profile-static', 'profile']))
-                <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
-                    <span class="mask {{ $bgColor }} opacity-6"></span>
-                </div>
-            @endif
-            @include('layouts.navbars.auth.sidenav')
-                <main class="main-content border-radius-lg">
-                    @yield('content')
-                </main>
-        @endif
+            // Set different background colors based on user roles
+            switch($userRole) {
+                case 'student':
+                    $bgColor = 'bg-primary'; // Set the background color for student
+                    break;
+                case 'vendor':
+                    $bgColor = 'bg-success'; // Set the background color for outside vendor
+                    break;
+                default:
+                    $bgColor = 'bg-info'; // Set the background color for admins    
+                    break;
+            }
+        @endphp
+        <div class="min-height-300 {{ $bgColor }} position-absolute w-100"></div>
+        @include('layouts.navbars.auth.sidenav')
+            <main class="main-content border-radius-lg">
+                @yield('content')
+            </main>
     @endauth
 
     <!--   Core JS Files   -->

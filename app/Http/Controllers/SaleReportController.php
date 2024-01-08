@@ -16,24 +16,41 @@ use function PHPUnit\Framework\isEmpty;
 class SaleReportController extends Controller
 {
     // show the sale report to participants
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::getUser();
         $role = $user->role;
         $participant_id = $this->get_participant_ID();
+        
+        $view_year = $request->view_year;
+        
+        // Check if $request->view_year is not set or empty
+        if (!$view_year) {
+            $view_year = date('Y'); // Get the current year
+        }
+        
+        $sales_data = $this->show($participant_id);
 
-        return view('ManageReport.ShowReport', ['role' => $role, 'sales_data' => $this->show($participant_id), 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
+        return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
     }
 
     // show the sale report to pupuk admin of selected participant
-    public function admin_index(int $participant_id, string $kiosk_id, string $kiosk_owner)
+    public function admin_index(Request $request, int $participant_id, string $kiosk_id, string $kiosk_owner)
     {
+        
         $user = Auth::getUser();
         $role = $user->role;
 
+        $view_year = $request->view_year;
+        // Check if $request->view_year is not set or empty
+        if (!$view_year) {
+            $view_year = date('Y'); // Get the current year
+        }
+
         $sale_data = $this->show($participant_id);
 
-        return view('ManageReport.ShowReport', ['role' => $role, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
+
+        return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
     }
 
     public function get_total_sales(int $partiID) {
@@ -96,25 +113,9 @@ class SaleReportController extends Controller
      */
     public function show(int $parti_ID)
     {
-        $sale_data = [];
-
-        // Fetch sales data for each month from January to December
-        for ($i = 1; $i <= 12; $i++) {
-            $month = str_pad($i, 2, '0', STR_PAD_LEFT); // Format month with leading zero
-            $date = Carbon::create(null, $i, 1); // Create Carbon instance for the month
-
-            // Fetch sales data for the current month
-            $sales = sale_report::where('parti_ID', $parti_ID)
-                ->whereMonth('created_at', $month)
-                ->get();
-            
-            
-            // Store sales data for the month in the $salesData array
-            $sale_data[$date->format('F')] = $sales; // Use month name as array key
-        }
-
-
-        return $sale_data;
+        $salesReports = Sale_report::where('parti_ID', $parti_ID)            
+                        ->get();
+        return $salesReports;
     }
 
     // function to retreive KISOK id and KIOSK owner from the database
@@ -161,7 +162,7 @@ class SaleReportController extends Controller
      */
     public function edit(sale_report $sale_report)
     {
-        dd($sale_report);
+ 
     }
 
     /**
@@ -172,7 +173,6 @@ class SaleReportController extends Controller
         $report = sale_report::findOrFail($request["report_ID"]);
         // Update the sale data
         $report->sales = $request->input('sale_input');
-        // Update other fields as needed
 
         $report->save();
         return redirect()->route('show-report');
