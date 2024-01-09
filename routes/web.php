@@ -29,6 +29,7 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SaleReportController;
+use App\Http\Controllers\ComplaintController;
 use App\Models\Participant;
 use Illuminate\Support\Facades\Auth;
 
