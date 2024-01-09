@@ -19,18 +19,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
-        // 'firstname',
-        // 'lastname',
+        'user_ID',
         'email',
         'password',
-        // 'address',
-        // 'city',
-        // 'country',
-        // 'postal',
-        // 'about'
         'phone_num',
         'role'
     ];
+
 
 
     //specifying user table primary key

@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string("tech_ID")->references("tech_ID")->on("tech_teams");
             $table->enum("complaint_status", ["open", "close", "in_progress", "completed"]);
             $table->string("description", 256);
+            $table->string("complaint_title", 256);
+            $table->string("complaint_solution", 256);
+            
+            
             $table->timestamps();
         });
     }
