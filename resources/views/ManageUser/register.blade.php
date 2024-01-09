@@ -2,10 +2,45 @@
 
 @include('layouts.navbars.guest.navbar')
 
+{{-- js to dynamically render and hide matric and ic input field --}}
+@push("js")
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var userRole = document.getElementById('userRole');
+        var matricField = document.getElementById('matric_number');
+        var icField = document.getElementById('ic_number');
+
+        // Function to check and render the additional input field based on the initial value
+        function renderAdditionalInput() {
+            var selectedValue = userRole.value;
+
+            // Check the selected value and show/hide the additional input field
+            if (selectedValue === 'student') {
+                matricField.style.display = 'block';
+                icField.style.display = 'none';
+            }
+            
+            if (selectedValue === 'vendor') {
+                matricField.style.display = 'none';
+                icField.style.display = 'block';
+            }
+        }
+
+        // Render the additional input field immediately after the DOM is loaded
+        renderAdditionalInput();
+
+        // Event listener to handle changes in the dropdown
+        userRole.addEventListener('change', function() {
+            renderAdditionalInput(); // Call the function on dropdown change
+        });
+    });
+</script> 
+@endpush   
+
 @section('content')
     <main class="main-content  mt-0">
         <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
-            style="background-image: url('https://scontent.fkul21-2.fna.fbcdn.net/v/t39.30808-6/305837708_570654004860041_5002931631043837671_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=ZGs4ohw3K4IAX-qH2WP&_nc_ht=scontent.fkul21-2.fna&oh=00_AfBGiyPO9Lv5aq6CtmuZMigxER6aZjPvU5OVQQJ9HJ2VLw&oe=65644AC3'); background-position: bottom;">
+            style="background-image: url('/img/register_banner.jpg'); background-position: bottom;">
             <span class="mask bg-gradient-dark opacity-6"></span>
             <div class="container">
                 <div class="row justify-content-center">
@@ -38,7 +73,7 @@
                                 <!-- phone number input -->
                                 <div class="flex flex-col mb-3">
                                     <input type="text" name="phone_num" class="form-control" placeholder="Phone number" aria-label="Phone" value="{{ old('phone_num') }}" >
-                                    @error('phone_number') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                                    @error('phone_num') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
                                 </div>
 
                                 <!-- password input -->
@@ -55,12 +90,24 @@
 
                                 <!-- user type drop down -->
                                 <div class="flex flex-col mb-3">
-                                    <select name="role" class="form-control" placeholder="Select your user group">
+                                    <select name="role" class="form-control" placeholder="Select user group" id="userRole">
                                         <option selected disabled>Select your user group</option>
                                         <option value="student">Student</option>
                                         <option value="vendor">Outside Vendor</option>
                                     </select>
                                     @error('role') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                                </div>
+
+                                <!-- student matric input -->
+                                <div id="matric_number" class="flex flex-col mb-3" style="display: none;">
+                                    <input type="text" name="matric_number" class="form-control" placeholder="Enter your matric number" aria-label="Matric number">
+                                    @error('matric_number') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                                </div>
+
+                                <!-- ic number  input -->
+                                <div id="ic_number" class="flex flex-col mb-3" style="display: none;">
+                                    <input type="text" name="ic_number" class="form-control" placeholder="Enter your IC number" aria-label="IC number">
+                                    @error('ic_number') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
                                 </div>
 
                                 <!-- t and c confirm -->

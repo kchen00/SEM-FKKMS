@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kiosks', function (Blueprint $table) {
             $table->id("kiosk_ID");
             $table->string("description", 256);
-            $table->float("rent_price", 8, 2);
+            // $table->float("rent_price", 8, 2);
             $table->boolean("rented");
             $table->timestamps();
         });
