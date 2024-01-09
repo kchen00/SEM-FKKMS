@@ -135,3 +135,22 @@ Route::get('/admin-force-reset', [ResetPassword::class, "admin_show"])
 	
 Route::post('/admin-force-reset', [ChangePassword::class, "update"])
 	->name('admin-force-reset.perform');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/complaintmenu', [ComplaintController::class, 'index'])->name('complaint-menu'); 
+    Route::get('/complaintform', [ComplaintController::class, 'create'])->name('complaint-form');
+    Route::get('/complaintview', [ComplaintController::class, 'show'])->name('complaint-shows');
+
+    Route::get('/complaintviewTech', [ComplaintController::class, 'update'])->name('complaint.show');
+    // In web.php or api.php
+    Route::post('/ComplainStatus/{complaint_ID}', [ComplaintController::class, 'updatestat'])->name('complaint.status');
+    Route::post('/ComplainStatus/{complaint_ID}/Solution', [ComplaintController::class, 'storeSolution'])->name('complaint.solution');
+    
+    
+
+    // Example route in web.php
+    // Example route in web.php
+    Route::post('/complaintform', [ComplaintController::class, 'store'])->name('complaint-form.store');
+    Route::delete('/complaint/{complaint_ID}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
+    Route::get('/complaintReport', [ComplaintController::class, 'StoreReport'])->name('complaint-report');
+ });
