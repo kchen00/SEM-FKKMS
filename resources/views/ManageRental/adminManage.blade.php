@@ -75,7 +75,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        @if (@empty($vendors))
+                        @if (@empty($rentals))
                             <div class="text-center">
                                 no records on rental
                             </div>

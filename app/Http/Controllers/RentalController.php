@@ -39,27 +39,6 @@ class RentalController extends Controller
         return view('manageRental.adminManage', compact('applications','rentals'));
     }
 
-
-    public function displayFile($fileName)
-    {
-        $filePath = 'documents/' . $fileName;
-
-        // Check if the file exists
-        if (Storage::disk('local')->exists($filePath)) {
-            $file = Storage::disk('local')->get($filePath);
-            $mimeType = Storage::disk('local')->mimeType($filePath);
-
-            // Return the file response with appropriate headers
-            return Response::make($file, 200, [
-                'Content-Type' => $mimeType,
-                'Content-Disposition' => 'inline; filename="' . $fileName . '"',
-            ]);
-        } else {
-            // File not found
-            abort(404);
-        }
-    }
-
     /**
      * Display the specified resource.
      */
@@ -103,14 +82,19 @@ class RentalController extends Controller
 
     public function adminUpdate(Request $request, $id)
     {
-        
+        $rental = rental::find($id);
+        // dd($rental, $request->all());
+        if($rental){
+            $rental->update($request->all());
+        }
+        return redirect(route('rental.adminManage'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(application $application)
-    {
-        //
-    }
+    // public function destroy(application $application)
+    // {
+    //     //
+    // }
 }
