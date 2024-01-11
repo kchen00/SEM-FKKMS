@@ -209,7 +209,7 @@
                                                             <div class="author align-items-center">
                                                                 <div class="name ps-3">
                                                                     <div class="stats">
-                                                                        <small>Posted on {{  $sale->comment_at  }}</small>
+                                                                        <small>Posted on {{  $sale->comment_time  }}</small>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -235,7 +235,7 @@
                                 @endif
                             @endforeach
                         @endif
-                        @if($view_year == now()->year)
+                        @if($view_year == now()->year && $role != "pp_admin" && !empty($sale_data))
                             @php
                                 $lastSale = $sales_data->last();
                                 $lastSaleDate = \Carbon\Carbon::parse($lastSale->created_at);

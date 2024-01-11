@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Storesale_reportRequest;
 use App\Http\Requests\Updatesale_reportRequest;
+use App\Models\Application;
 use App\Models\Participant;
 use App\Models\rental;
 use App\Models\Sale_report;
@@ -20,18 +21,28 @@ class SaleReportController extends Controller
     {
         $user = Auth::getUser();
         $role = $user->role;
-        $participant_id = $this->get_participant_ID();
-        
-        $view_year = $request->view_year;
-        
-        // Check if $request->view_year is not set or empty
-        if (!$view_year) {
-            $view_year = date('Y'); // Get the current year
-        }
-        
-        $sales_data = $this->show($participant_id);
+        if($role == "student"||$role == "vendor") {
+            $participant_id = $this->get_participant_ID();
+            $application = Application::where('parti_id', $participant_id)->first();
 
-        return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
+            if($application) {
+                $view_year = $request->view_year;
+    
+                // Check if $request->view_year is not set or empty
+                if (!$view_year) {
+                    $view_year = date('Y'); // Get the current year
+                }
+    
+                $sales_data = $this->show($participant_id);
+    
+                return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
+
+            }
+
+            return redirect();
+        }
+
+        return back();
     }
 
     // show the sale report to pupuk admin of selected participant
@@ -40,17 +51,20 @@ class SaleReportController extends Controller
         
         $user = Auth::getUser();
         $role = $user->role;
-
-        $view_year = $request->view_year;
-        // Check if $request->view_year is not set or empty
-        if (!$view_year) {
-            $view_year = date('Y'); // Get the current year
+        if($role == "pp_admin") {
+            $view_year = $request->view_year;
+            // Check if $request->view_year is not set or empty
+            if (!$view_year) {
+                $view_year = date('Y'); // Get the current year
+            }
+    
+            $sale_data = $this->show($participant_id);
+    
+    
+            return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
         }
 
-        $sale_data = $this->show($participant_id);
-
-
-        return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
+        return back();
     }
 
     public function get_total_sales(int $partiID) {
