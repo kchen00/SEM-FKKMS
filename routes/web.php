@@ -14,15 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-	return view('welcome');
-});
-
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\FeeController;
@@ -30,80 +23,98 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\SaleReportController;
 use App\Http\Controllers\ComplaintController;
+use App\Models\Application;
 use App\Models\Participant;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-	return redirect('/dashboard');
-})->middleware('auth');
+    return redirect()->route('dashboard');
+});
+
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+    $role = $user->role;
+
+    if ($role == "student" || $role == "vendor") {
+    	$participant = Participant::where("user_ID", $user->user_ID)->first();
+	    $application = Application::where("parti_ID", $participant->parti_ID)->latest('created_at')->first();
+
+        if (!$application) {
+            return view("ManageUser.dashboard", ["has_application" => false, "application_status" => "none"]);
+        } elseif ($application->status == "rejected") {
+            return view("ManageUser.dashboard", ["has_application" => true, "application_status" => "rejected"]);
+        } elseif ($application->status == "accepted") {
+            return view("ManageUser.dashboard", ["has_application" => true, "application_status" => "accepted"]);
+        } else {
+            return view("ManageUser.dashboard", ["has_application" => true, "application_status" => "in_progress"]);
+ 
+        }
+    }
+
+    return view("ManageUser.dashboard", ["has_application" => true, "application_status" => "none"]);
+})->middleware("auth")->name('dashboard');
 
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'public_store'])->middleware('guest')->name('register.perform');
 Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name('login.perform');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/reset-password', [ResetPassword::class, 'show'])->middleware('guest')->name('reset-password');
 Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('guest')->name('reset.perform');
 Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
 Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 
-Route::view('/dashboard', "ManageUser.dashboard")->middleware(["auth", "firstTimeLogin"])->name('home');
-
-Route::prefix('application')->name('application.')->group(function () {
-	Route::get('/manage', [ApplicationController::class, 'index'])->middleware('auth')->name('manage');
-	Route::get('/adminManage', [ApplicationController::class, 'adminManage'])->middleware('auth')->name('adminManage');
-	Route::get('/edit/{id}', [ApplicationController::class, 'edit'])->middleware('auth')->name('edit');
-	Route::get('/adminEdit/{id}', [ApplicationController::class, 'adminEdit'])->middleware('auth')->name('adminEdit');
-	Route::post('/update/{id}', [ApplicationController::class, 'update'])->middleware('auth')->name('update');
-	Route::post('/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->middleware('auth')->name('adminUpdate');
-	Route::get('/show/{id}', [ApplicationController::class, 'show'])->middleware('auth')->name('show');   
-	Route::get('/create', [ApplicationController::class, 'create'])->middleware('auth')->name('create');
-	Route::post('/store', [ApplicationController::class, 'store'])->middleware('auth')->name('store');
+Route::prefix('application')->name('application.')->middleware(['auth', 'firstTimeLogin'])->group(function () {
+    Route::get('/manage', [ApplicationController::class, 'index'])->name('manage');
+    Route::get('/adminManage', [ApplicationController::class, 'adminManage'])->name('adminManage');
+    Route::get('/edit/{id}', [ApplicationController::class, 'edit'])->name('edit');
+    Route::get('/adminEdit/{id}', [ApplicationController::class, 'adminEdit'])->name('adminEdit');
+    Route::post('/update/{id}', [ApplicationController::class, 'update'])->name('update');
+    Route::post('/adminUpdate/{id}', [ApplicationController::class, 'adminUpdate'])->name('adminUpdate');
+    Route::get('/show/{id}', [ApplicationController::class, 'show'])->name('show');
+    Route::get('/create', [ApplicationController::class, 'create'])->name('create');
+    Route::post('/store', [ApplicationController::class, 'store'])->name('store');
 });
 
-Route::prefix('rental')->name('rental')->group(function () {
-	Route::get('/', [RentalController::class, 'index'])->middleware('auth')->name('');
-	Route::get('/adminManage', [RentalController::class, 'adminManage'])->middleware('auth')->name('.adminManage');
-	Route::get('/edit/{id}', [RentalController::class, 'edit'])->middleware('auth')->name('.edit');
-	Route::get('/adminEdit/{id}', [RentalController::class, 'adminEdit'])->middleware('auth')->name('.adminEdit');
-	Route::post('/update/{id}', [RentalController::class, 'update'])->middleware('auth')->name('.update');
-	Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->middleware('auth')->name('.adminUpdate');
-	Route::get('/show', [RentalController::class, 'show'])->middleware('auth')->name('.show');
+
+Route::prefix('rental')->name('rental')->middleware(['auth', 'firstTimeLogin', 'checkApplication'])->group(function () {
+    Route::get('/', [RentalController::class, 'index'])->name('');
+    Route::get('/adminManage', [RentalController::class, 'adminManage'])->name('.adminManage');
+    Route::get('/edit/{id}', [RentalController::class, 'edit'])->name('.edit');
+    Route::get('/adminEdit/{id}', [RentalController::class, 'adminEdit'])->name('.adminEdit');
+    Route::post('/update/{id}', [RentalController::class, 'update'])->name('.update');
+    Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->name('.adminUpdate');
+    Route::get('/show', [RentalController::class, 'show'])->name('.show');
 });
 
-Route::prefix('payment')->name('payment')->group(function () {
-	Route::get('/', [PaymentController::class, 'index'])->middleware('auth')->name('');
-	Route::get('/create', [PaymentController::class, 'create'])->middleware('auth')->name('.create');
-	Route::post('/store', [PaymentController::class, 'store'])->middleware('auth')->name('.store');
-	Route::get('/bursaryManage', [PaymentController::class, 'bursaryManage'])->middleware('auth')->name('.bursaryManage');
-	Route::get('/edit/{id}', [PaymentController::class, 'edit'])->middleware('auth')->name('.edit');
-	Route::get('/bursaryEdit/{id}', [PaymentController::class, 'bursaryEdit'])->middleware('auth')->name('.bursaryEdit');
-	Route::post('/update/{id}', [PaymentController::class, 'update'])->middleware('auth')->name('.update');
-	Route::post('/bursaryUpdate/{id}', [PaymentController::class, 'bursaryUpdate'])->middleware('auth')->name('.bursaryUpdate');
-	Route::get('/show/{id}', [PaymentController::class, 'show'])->middleware('auth')->name('.show');
-});
-Route::get('/fee', [FeeController::class, 'edit'])->middleware('auth')->name('fee');
-Route::post('/fee/update', [FeeController::class, 'update'])->middleware('auth')->name('fee.update');
-// Route::get('/rental', [RentalController::class, 'index'])->middleware('auth')->name('rental');
-Route::get('documents/{fileName}', [ApplicationController::class, 'displayFile'])->name('file.display');
 
-Route::group(['middleware' => 'auth'], function () {
-	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
-	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
-	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
-	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
-	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
-	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
-	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
-	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+Route::prefix('payment')->name('payment')->middleware(['auth', 'firstTimeLogin', 'checkApplication'])->group(function () {
+    Route::get('/', [PaymentController::class, 'index'])->name('');
+    Route::get('/create', [PaymentController::class, 'create'])->name('.create');
+    Route::post('/store', [PaymentController::class, 'store'])->name('.store');
+    Route::get('/bursaryManage', [PaymentController::class, 'bursaryManage'])->name('.bursaryManage');
+    Route::get('/edit/{id}', [PaymentController::class, 'edit'])->name('.edit');
+    Route::get('/bursaryEdit/{id}', [PaymentController::class, 'bursaryEdit'])->name('.bursaryEdit');
+    Route::post('/update/{id}', [PaymentController::class, 'update'])->name('.update');
+    Route::post('/bursaryUpdate/{id}', [PaymentController::class, 'bursaryUpdate'])->name('.bursaryUpdate');
+    Route::get('/show/{id}', [PaymentController::class, 'show'])->name('.show');
+});
+
+
+Route::middleware(["auth", "firstTimeLogin"])->group(function() {
+	Route::get('/fee', [FeeController::class, 'edit'])->name('fee');
+	Route::post('/fee/update', [FeeController::class, 'update'])->name('fee.update');
+	Route::get('documents/{fileName}', [ApplicationController::class, 'displayFile'])->name('file.display');
 });
 
 //manage sales report routes
-Route::middleware(["auth", "firstTimeLogin"])->group(function () {
+Route::middleware(["auth", "firstTimeLogin", 'checkApplication'])->group(function () {
 Route::get("/show-kiosk", [SaleReportController::class, 'show_kiosk'])
 	->name("show-kiosk");
 
 Route::get("/show-report", [SaleReportController::class, 'index'])
-	->name("show-report");
+	->name("show-report")
+	->middleware('checkApplication');
 
 Route::get('/admin-show-report/{participant_id}/{kiosk_id}/{kiosk_owner}', [SaleReportController::class, 'admin_index'])
     ->name('admin-show-report');
@@ -137,21 +148,18 @@ Route::get('/admin-force-reset', [ResetPassword::class, "admin_show"])
 Route::post('/admin-force-reset', [ChangePassword::class, "update"])
 	->name('admin-force-reset.perform');
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/complaintmenu', [ComplaintController::class, 'index'])->name('complaint-menu'); 
-    Route::get('/complaintform', [ComplaintController::class, 'create'])->name('complaint-form');
-    Route::get('/complaintview', [ComplaintController::class, 'show'])->name('complaint-shows');
+Route::group(['middleware' => ['auth', 'firstTimeLogin', 'checkApplication']], function () {
+	Route::get('/complaintmenu', [ComplaintController::class, 'index'])->name('complaint-menu'); 
+	Route::get('/complaintform', [ComplaintController::class, 'create'])->name('complaint-form');
+	Route::get('/complaintview', [ComplaintController::class, 'show'])->name('complaint-shows');
 
-    Route::get('/complaintviewTech', [ComplaintController::class, 'update'])->name('complaint.show');
-    // In web.php or api.php
-    Route::post('/ComplainStatus/{complaint_ID}', [ComplaintController::class, 'updatestat'])->name('complaint.status');
-    Route::post('/ComplainStatus/{complaint_ID}/Solution', [ComplaintController::class, 'storeSolution'])->name('complaint.solution');
-    
-    
-
-    // Example route in web.php
-    // Example route in web.php
-    Route::post('/complaintform', [ComplaintController::class, 'store'])->name('complaint-form.store');
-    Route::delete('/complaint/{complaint_ID}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
-    Route::get('/complaintReport', [ComplaintController::class, 'StoreReport'])->name('complaint-report');
- });
+	Route::get('/complaintviewTech', [ComplaintController::class, 'update'])->name('complaint.show');
+	// In web.php or api.php
+	Route::post('/ComplainStatus/{complaint_ID}', [ComplaintController::class, 'updatestat'])->name('complaint.status');
+	Route::post('/ComplainStatus/{complaint_ID}/Solution', [ComplaintController::class, 'storeSolution'])->name('complaint.solution');
+	
+	Route::post('/complaintform', [ComplaintController::class, 'store'])->name('complaint-form.store');
+	Route::delete('/complaint/{complaint_ID}', [ComplaintController::class, 'destroy'])->name('complaint.destroy');
+	Route::get('/complaintReport', [ComplaintController::class, 'StoreReport'])->name('complaint-report');
+});
+	

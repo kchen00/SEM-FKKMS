@@ -7,7 +7,7 @@
                     <script>
                         document.write(new Date().getFullYear())
                     </script>,
-                    made with <i class="fa fa-heart"></i> by Group 7 SEP Section 2A 
+                    made with <i class="fa fa-heart"></i> by Group Seven 2A
                 </div>
             </div>
             <div class="col-lg-6">

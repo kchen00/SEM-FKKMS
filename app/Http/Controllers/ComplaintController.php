@@ -32,8 +32,8 @@ class ComplaintController extends Controller
      */
     public function create()
     {
-        $user = auth()->user(); // Assuming you are using Laravel's authentication
-     return view('ManageComplaint.complaintform', compact('user'));
+        $user = auth()->user(); 
+        return view('ManageComplaint.complaintform', compact('user'));
     }
 
     /**
@@ -41,12 +41,14 @@ class ComplaintController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user(); // Assuming you are using Laravel's authentication
+        $user = auth()->user();
 
         $complaint = new Complaint();
         $complaint->parti_ID = $request->parti_ID;
+        $complaint->tech_ID = 0;
         $complaint->complaint_title = $request->input('complaintTitle');
         $complaint->description = $request->input('complaintDetails');
+        $complaint->complaint_solution = "";
         $complaint->save();
 
         return redirect()->back()->with('success', 'Complaint stored successfully!');
@@ -77,7 +79,7 @@ class ComplaintController extends Controller
     public function update() //status
     {
         if(Auth::user()->role == "tech_team") {
-            $complaints = Complaint::with('user')->get(); // Replace with your actual query to retrieve complaints
+            $complaints = Complaint::with('user')->get(); 
             $users = User::all();
             $userNamesByUserId = [];
 

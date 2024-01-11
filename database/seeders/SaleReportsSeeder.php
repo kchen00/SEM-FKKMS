@@ -21,10 +21,10 @@ class SaleReportsSeeder extends Seeder
 
         while ($dateRange->lessThanOrEqualTo($endDate)) {
             Sale_report::create([
-                'parti_ID' => 1,
+                'parti_ID' => 2,
                 'sales' => round(mt_rand(0, 1000), 2),
                 'comment' => 'Full texts comment',
-                'comment_at' => now(),
+                'comment_time' => now(),
                 'created_at' => $dateRange,
                 'updated_at' => now(),
             ]);
