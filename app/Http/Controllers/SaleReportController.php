@@ -211,7 +211,10 @@ class SaleReportController extends Controller
         $newComment = $validatedData["pp_comment"];
         $report_id = $validatedData["report_ID"];
         Sale_report::where('report_id', $report_id)
-            ->update(['comment' => $newComment]);
+            ->update([
+                'comment' => $newComment,
+                'comment_time' => now(),
+        ]);
 
         return back();
     }

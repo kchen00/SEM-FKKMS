@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId("parti_ID")->references("parti_ID")->on("participants")->nullable();
             $table->string('month')->nullable();
             $table->float('amount');
-            $table->timestamps();
         });
     }
 
