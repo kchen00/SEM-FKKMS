@@ -179,7 +179,7 @@
                                                                     <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="RM{{  number_format($sale->sales,2)  }}">
+                                                                    <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="{{  number_format($sale->sales,2)  }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
@@ -235,7 +235,7 @@
                                 @endif
                             @endforeach
                         @endif
-                        @isset($lastSale)
+                        @if($view_year == now()->year)
                             @php
                                 $lastSale = $sales_data->last();
                                 $lastSaleDate = \Carbon\Carbon::parse($lastSale->created_at);
@@ -272,7 +272,7 @@
                                     <td></td> <!-- Empty column -->
                                 </tr>
                             @endif    
-                        @endisset
+                        @endif
                     </tbody>
                 </table>
             </div>
