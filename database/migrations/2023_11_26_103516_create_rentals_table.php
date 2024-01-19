@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('rentals', function (Blueprint $table) {
             $table->id("rentals_ID");
             $table->string("description", 256);
-            $table->enum("status", ["on going", "teminated"]);
+            $table->enum("status", ["on going", "terminated"]);
             $table->foreignId("parti_ID")->references("parti_ID")->on("participants")->nullable();
             $table->foreignId("kiosk_ID")->references("kiosk_ID")->on("kiosks")->nullable();
             $table->timestamp("startdate")->nullable();

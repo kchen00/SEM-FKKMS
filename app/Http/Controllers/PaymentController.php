@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class PaymentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the payment.
      */
     public function index()
     {
@@ -56,7 +56,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created payment in storage.
      */
     public function store(Request $request)
     {
@@ -78,34 +78,30 @@ class PaymentController extends Controller
             'status' => 'received',
             'payment_proof' => $fileName,
         ]);
-        // dd($request->all());
         $payment = payment::create($request->all());
-        // dd($payment);
         return redirect(route('payment'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the application.
      */
     public function show($id)
     {
-        //
         $payment = payment::find($id);
         return view('managePayment.show', compact('payment'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the payment for FK bursary.
      */
     public function bursaryEdit(Request $request, $id)
     {
         //
         $payment = payment::find($id);
-        // $payment->update($request->all());
-        // $payment->save();
         return view('managePayment.bursaryEdit', compact('payment'));
     }
-
+    
+    // Update the payment in storate
     public function bursaryUpdate(Request $request, $id)
     {
         //
@@ -115,12 +111,9 @@ class PaymentController extends Controller
         return redirect(route('payment.bursaryManage'));
     }
 
-
     public function bursaryManage()
     {
-        // $payments = payment::get()->with('participant')->sortBy('status');
         $payments = Payment::with('participant.user')->orderBy('status')->get();
-        // dd($payments);
         return view('managePayment.bursaryManage', compact('payments'));
     }
 }

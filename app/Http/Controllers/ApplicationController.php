@@ -194,8 +194,8 @@ class ApplicationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(application $application)
-    {
-        //
-    }
+    // public function destroy(application $application)
+    // {
+    //     //
+    // }
 }
