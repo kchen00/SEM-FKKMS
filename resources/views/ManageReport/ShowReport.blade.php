@@ -322,6 +322,16 @@
 
     </div>
     @include('layouts.footers.auth.footer')
+
+    @if ($errors->any())
+    <script>
+        var errorMessage = "";
+        @foreach ($errors->all() as $error)
+            errorMessage += "{{ $error }}\n";
+        @endforeach
+        alert(errorMessage);
+    </script>
+    @endif
 @endsection
 
 @push('js')

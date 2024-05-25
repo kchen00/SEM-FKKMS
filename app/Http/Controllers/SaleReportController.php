@@ -186,6 +186,11 @@ class SaleReportController extends Controller
     public function update(Updatesale_reportRequest $request, sale_report $sale_report)
     {
         $report = sale_report::findOrFail($request["report_ID"]);
+        $validatedData = $request->validate([
+            'sale_input' => 'required|numeric|between:0.01,9999.99',
+            "date" => "required",
+        ]);
+
         // Update the sale data
         $report->sales = $request->input('sale_input');
 
