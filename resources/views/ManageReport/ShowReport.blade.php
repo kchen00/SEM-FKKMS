@@ -57,6 +57,48 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales Growth:</p>
+                                    <h5 class="font-weight-bolder">
+                                        Better than last month
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-success shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-up opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Revenue:</p>
+                                    <h5 class="font-weight-bolder">
+                                        +RM 100.50
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-success shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-plus opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- display the sales chart -->
         <div class="card m-2">
@@ -65,7 +107,7 @@
                     <div class="row">
                         @if($role == "pp_admin")
                             {{-- infor for pupuk admin, hide when the user is participant --}}
-                            <div class="col"> 
+                            <div class="col">
                                 <p class="text-start">KIOSK ID:  {{  $kiosk_id  }}</p>
                                 <p class="text-start">KIOSK Owner:  {{  $kiosk_owner  }}</p>
                             </div>
@@ -85,7 +127,7 @@
                                             <button type="submit" class="btn btn-primary">Filter sales</button>
                                         </div>
                                     </div>
-                                </form>                                
+                                </form>
                             </div>
                         </div>
                         <div class="col position-relative">
@@ -213,7 +255,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        @endif 
+                                                        @endif
                                                     </div>
                                                 @elseif ($role == "pp_admin")
                                                 {{-- if role is pupuk, show a form to submit comment --}}
@@ -226,10 +268,10 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <input class="btn btn-icon btn-3 btn-primary" type="submit" value='Submit comment'>
-                                                            </div>  
-                                                        </form>                 
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                @endif            
+                                                @endif
                                             </td>
                                     </tr>
                                 @endif
@@ -271,7 +313,7 @@
                                     </td>
                                     <td></td> <!-- Empty column -->
                                 </tr>
-                            @endif    
+                            @endif
                         @endif
                     </tbody>
                 </table>
@@ -291,7 +333,7 @@
     function groupSalesFiguresByMonthName(salesData) {
         const groupedSalesFigures = {};
 
-        // Filter sales data for the year 
+        // Filter sales data for the year
         const salesDataYear = salesData.filter(sale => {
             const date = new Date(sale.created_at);
             return date.getFullYear() === parseInt(document.getElementById('viewYear').value);
@@ -330,7 +372,7 @@
 
     // Group the sales figures by year
     const totalSalesPerYear = getTotalSalesPerYear(salesData);
-    
+
     // Group the sales figures by month name
     const groupedSalesFiguresByMonthName = groupSalesFiguresByMonthName(salesData);
 
@@ -340,7 +382,7 @@
     // Extracting month names and sales figures from the object
     const month = Object.keys(groupedSalesFiguresByMonthName); // Array of month names
     const month_sale = Object.values(groupedSalesFiguresByMonthName); // Array of sales figures
-    
+
     // Extracting year and sales figures from the object
     const year = Object.keys(totalSalesPerYear); // Array of year
     const year_sale = Object.values(totalSalesPerYear); // Array of sales figures

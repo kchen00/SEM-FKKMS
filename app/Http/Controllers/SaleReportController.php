@@ -27,14 +27,14 @@ class SaleReportController extends Controller
 
             if($application) {
                 $view_year = $request->view_year;
-    
+
                 // Check if $request->view_year is not set or empty
                 if (!$view_year) {
                     $view_year = date('Y'); // Get the current year
                 }
-    
+
                 $sales_data = $this->show($participant_id);
-    
+
                 return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
 
             }
@@ -48,7 +48,7 @@ class SaleReportController extends Controller
     // show the sale report to pupuk admin of selected participant
     public function admin_index(Request $request, int $participant_id, string $kiosk_id, string $kiosk_owner)
     {
-        
+
         $user = Auth::getUser();
         $role = $user->role;
         if($role == "pp_admin") {
@@ -57,10 +57,10 @@ class SaleReportController extends Controller
             if (!$view_year) {
                 $view_year = date('Y'); // Get the current year
             }
-    
+
             $sale_data = $this->show($participant_id);
-    
-    
+
+
             return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
         }
 
@@ -81,7 +81,7 @@ class SaleReportController extends Controller
         $average_sales = Sale_report::where('parti_ID', $partiID)
                                 ->avg('sales');
 
-        
+
         return number_format($average_sales, 2);
     }
 
@@ -127,7 +127,7 @@ class SaleReportController extends Controller
      */
     public function show(int $parti_ID)
     {
-        $salesReports = Sale_report::where('parti_ID', $parti_ID)            
+        $salesReports = Sale_report::where('parti_ID', $parti_ID)
                         ->get();
         return $salesReports;
     }
@@ -154,7 +154,8 @@ class SaleReportController extends Controller
                     // Store kiosk_id, parti_id, and username in the array
                     $kiosk_id_owner[$kioskId] = [
                         'parti_id' => $partiId,
-                        'username' => $username
+                        'username' => $username,
+                        "updated_at" => Sale_report::where("parti_id", $partiId)->orderBy('updated_at', 'desc')->value('updated_at'),
                     ];
                 }
             }
@@ -176,7 +177,7 @@ class SaleReportController extends Controller
      */
     public function edit(sale_report $sale_report)
     {
- 
+
     }
 
     /**
