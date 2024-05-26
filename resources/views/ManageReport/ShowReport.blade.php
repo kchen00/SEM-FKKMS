@@ -98,14 +98,20 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Revenue:</p>
                                     <h5 class="font-weight-bolder">
-                                        +RM 100.50
+                                        RM {{ number_format($revenue,2) }}
                                     </h5>
                                 </div>
                             </div>
                             <div class="col-4 text-end">
+                                @if($revenue > 0)
                                 <div class="icon icon-shape bg-gradient-success shadow-warning text-center rounded-circle">
-                                    <i class="fa fa-plus opacity-10" aria-hidden="true"></i>
+                                    <i class="fa fa-arrow-up opacity-10" aria-hidden="true"></i>
                                 </div>
+                                @else
+                                <div class="icon icon-shape bg-gradient-danger shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-down opacity-10" aria-hidden="true"></i>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -181,6 +187,7 @@
                                     $colspan = 6;
                                 @endphp
                             @endif
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Cost</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sales</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Comments by PUPUK admin</th>
                         </tr>
@@ -233,7 +240,12 @@
                                                                     <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="{{  number_format($sale->sales,2)  }}">
+                                                                    <label for="cost_input">Cost:  </label>
+                                                                    <input type="text" class="form-control" id="cost_input" name="cost_input" placeholder="RM0.00" value="{{  number_format($sale->cost,2)  }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="sale_input">Sale:  </label>
+                                                                    <input type="text" class="form-control" id="sale_input" name="sale_input" placeholder="RM0.00" value="{{  number_format($sale->sales,2)  }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
@@ -247,6 +259,10 @@
                                                 </div>
                                             </td>
                                         @endif
+                                            {{-- cost column --}}
+                                            <td class="align-middle">
+                                                <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->cost,2) }}</p>
+                                            </td>
                                             {{-- sales column --}}
                                             <td class="align-middle">
                                                 <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->sales,2) }}</p>
@@ -529,7 +545,12 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="sale_input" placeholder="RM0.00">
+                                        <label for="cost_input">Cost:  </label>
+                                        <input type="text" class="form-control" id="cost_input" name="cost_input" placeholder="RM0.00">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sale_input">Sale:  </label>
+                                        <input type="text" class="form-control" id="sale_input" name="sale_input" placeholder="RM0.00">
                                     </div>
                                     <div class="form-group">
                                         <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id("report_ID");
             $table->foreignId("parti_ID")->references("parti_ID")->on("participants");
             $table->float("sales", 8, 2);
+            $table->float("cost", 8, 2);
             $table->string("comment", 256);
             $table->timestamp("comment_time")->nullable();
             $table->timestamps();

@@ -81,6 +81,6 @@ class DatabaseSeeder extends Seeder
             'amount' => 120,
             'type' => 'vendor',
         ]);
-        
+
     }
 }

@@ -35,7 +35,7 @@ class SaleReportController extends Controller
 
                 $sales_data = $this->show($participant_id);
 
-                return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), "growth" => $this->get_sales_growth($participant_id)]);
+                return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), "growth" => $this->get_sales_growth($participant_id), "revenue" => $this->get_total_revenue($participant_id)]);
             }
 
             return redirect();
@@ -60,7 +60,7 @@ class SaleReportController extends Controller
             $sale_data = $this->show($participant_id);
 
 
-            return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id' => $kiosk_id, 'kiosk_owner' => $kiosk_owner, "growth" => $this->get_sales_growth($participant_id)]);
+            return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id' => $kiosk_id, 'kiosk_owner' => $kiosk_owner, "growth" => $this->get_sales_growth($participant_id), "revenue" => $this->get_total_revenue($participant_id)]);
         }
 
         return back();
@@ -110,6 +110,15 @@ class SaleReportController extends Controller
 
     }
 
+    public function get_total_revenue(int $parti_ID) {
+        $total_sales = Sale_report::where("parti_ID", $parti_ID)->sum("sales");
+        $total_cost = Sale_report::where("parti_ID", $parti_ID)->sum("cost");
+
+        $total_revenue = $total_sales - $total_cost;
+
+        return $total_revenue;
+    }
+
     // show a list of kiosk to pupuk admin
     public function show_kiosk()
     {
@@ -131,12 +140,14 @@ class SaleReportController extends Controller
     {
         $validatedData = $request->validate([
             'sale_input' => 'required|numeric|between:0.01,9999.99',
+            'cost_input' => 'required|numeric|between:0.01,9999.99',
             "date" => "required",
         ]);
         // Create a new SaleReport model instance and assign validated data
         $saleReport = new sale_report();
         $saleReport->parti_ID = $this->get_participant_ID();
         $saleReport->sales = $validatedData['sale_input'];
+        $saleReport->cost = $validatedData['sale_input'];
         $saleReport->created_at = $validatedData['date'];
         $saleReport->updated_at = $validatedData['date'];
         $saleReport->comment = "";
@@ -215,11 +226,13 @@ class SaleReportController extends Controller
         $report = sale_report::findOrFail($request["report_ID"]);
         $validatedData = $request->validate([
             'sale_input' => 'required|numeric|between:0.01,9999.99',
+            'cost_input' => 'required|numeric|between:0.01,9999.99',
             "date" => "required",
         ]);
 
         // Update the sale data
         $report->sales = $request->input('sale_input');
+        $report->cost = $request->input('cost_input');
 
         $report->save();
         return redirect()->route('show-report');

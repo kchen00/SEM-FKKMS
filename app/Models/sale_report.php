@@ -17,6 +17,7 @@ class Sale_report extends Model
     protected $fillable = [
         "parti_ID",
         "sales",
+        "cost",
         "comment",
         "comment_time"
     ];
