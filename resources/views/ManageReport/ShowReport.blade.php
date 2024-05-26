@@ -64,15 +64,27 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales Growth:</p>
+                                    @if($growth > 0)
                                     <h5 class="font-weight-bolder">
                                         Better than last month
                                     </h5>
+                                    @else
+                                    <h5 class="font-weight-bolder">
+                                        Worse than last month
+                                    </h5>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-4 text-end">
+                                @if($growth > 0)
                                 <div class="icon icon-shape bg-gradient-success shadow-warning text-center rounded-circle">
                                     <i class="fa fa-arrow-up opacity-10" aria-hidden="true"></i>
                                 </div>
+                                @else
+                                <div class="icon icon-shape bg-gradient-danger shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-down opacity-10" aria-hidden="true"></i>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -35,7 +35,7 @@ class SaleReportController extends Controller
 
                 $sales_data = $this->show($participant_id);
 
-                return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id)]);
+                return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), "growth" => $this->get_sales_growth($participant_id)]);
             }
 
             return redirect();
@@ -60,7 +60,7 @@ class SaleReportController extends Controller
             $sale_data = $this->show($participant_id);
 
 
-            return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id' => $kiosk_id, 'kiosk_owner' => $kiosk_owner]);
+            return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id' => $kiosk_id, 'kiosk_owner' => $kiosk_owner, "growth" => $this->get_sales_growth($participant_id)]);
         }
 
         return back();
@@ -82,6 +82,32 @@ class SaleReportController extends Controller
 
 
         return number_format($average_sales, 2);
+    }
+
+    public function get_sales_growth(int $partiID) {
+        // Get the start and end dates for the current month
+        $currentMonthStart = Carbon::now()->startOfMonth();
+        $currentMonthEnd = Carbon::now()->endOfMonth();
+
+        // Get the start and end dates for the previous month
+        $previousMonthStart = Carbon::now()->subMonth()->startOfMonth();
+        $previousMonthEnd = Carbon::now()->subMonth()->endOfMonth();
+
+        // Get sales for the current month
+        $currentMonthSales = Sale_report::where('parti_ID', $partiID)
+        ->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
+        ->get()
+        ->value('sales');
+
+        // Get sales for the previous month
+        $previousMonthSales = Sale_report::where('parti_ID', $partiID)
+        ->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])
+        ->get()
+        ->value('sales');
+
+        $sales_growth =  $currentMonthSales - $previousMonthSales;
+        return $sales_growth;
+
     }
 
     // show a list of kiosk to pupuk admin
