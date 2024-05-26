@@ -21,11 +21,11 @@ class SaleReportController extends Controller
     {
         $user = Auth::getUser();
         $role = $user->role;
-        if($role == "student"||$role == "vendor") {
+        if ($role == "student" || $role == "vendor") {
             $participant_id = $this->get_participant_ID();
             $application = Application::where('parti_id', $participant_id)->first();
 
-            if($application) {
+            if ($application) {
                 $view_year = $request->view_year;
 
                 // Check if $request->view_year is not set or empty
@@ -35,8 +35,7 @@ class SaleReportController extends Controller
 
                 $sales_data = $this->show($participant_id);
 
-                return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id)]);
-
+                return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'sales_data' => $sales_data, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id)]);
             }
 
             return redirect();
@@ -51,7 +50,7 @@ class SaleReportController extends Controller
 
         $user = Auth::getUser();
         $role = $user->role;
-        if($role == "pp_admin") {
+        if ($role == "pp_admin") {
             $view_year = $request->view_year;
             // Check if $request->view_year is not set or empty
             if (!$view_year) {
@@ -61,25 +60,25 @@ class SaleReportController extends Controller
             $sale_data = $this->show($participant_id);
 
 
-            return view('ManageReport.ShowReport', ['role' => $role, 'view_year'=>$view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales'=>$this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id'=>$kiosk_id, 'kiosk_owner'=>$kiosk_owner]);
+            return view('ManageReport.ShowReport', ['role' => $role, 'view_year' => $view_year, 'participant_id' => $participant_id, 'total_sales' => $this->get_total_sales($participant_id), 'average_sales' => $this->get_average_sales($participant_id), 'sales_data' => $sale_data, 'kiosk_id' => $kiosk_id, 'kiosk_owner' => $kiosk_owner]);
         }
 
         return back();
     }
 
-    public function get_total_sales(int $partiID) {
+    public function get_total_sales(int $partiID)
+    {
         $total_sales = Sale_report::where('parti_ID', $partiID)
-                             ->sum('sales');
+            ->sum('sales');
 
         // Use $totalSales variable as needed
         return number_format($total_sales, 2);
-
     }
 
     public function get_average_sales(int $partiID)
     {
         $average_sales = Sale_report::where('parti_ID', $partiID)
-                                ->avg('sales');
+            ->avg('sales');
 
 
         return number_format($average_sales, 2);
@@ -128,7 +127,7 @@ class SaleReportController extends Controller
     public function show(int $parti_ID)
     {
         $salesReports = Sale_report::where('parti_ID', $parti_ID)
-                        ->get();
+            ->get();
         return $salesReports;
     }
 
@@ -157,6 +156,9 @@ class SaleReportController extends Controller
                         'username' => $username,
                         "updated_at" => Sale_report::where("parti_id", $partiId)->orderBy('updated_at', 'desc')->value('updated_at'),
                     ];
+                    // Check if the updated_at is within the last 24 hours
+                    $isJustUpdated = Carbon::parse($kiosk_id_owner[$kioskId]["updated_at"])->gt(Carbon::now()->subDay());
+                    $kiosk_id_owner[$kioskId]['just_updated'] = $isJustUpdated;
                 }
             }
         }
@@ -177,7 +179,6 @@ class SaleReportController extends Controller
      */
     public function edit(sale_report $sale_report)
     {
-
     }
 
     /**
@@ -220,7 +221,7 @@ class SaleReportController extends Controller
             ->update([
                 'comment' => $newComment,
                 'comment_time' => now(),
-        ]);
+            ]);
 
         return back();
     }
@@ -229,5 +230,4 @@ class SaleReportController extends Controller
     public function edit_comment()
     {
     }
-
 }

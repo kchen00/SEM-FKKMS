@@ -41,7 +41,7 @@
 
                                 {{-- last updated --}}
                                 <td class="align-middle text-middle">
-                                    {{ $data['updated_at'] }}
+                                    {{ $data['updated_at'] }} @if($data['just_updated'])<span class="badge bg-gradient-success">Just updated</span>@endif
                                 </td>
                             </tr>
                         @endforeach
