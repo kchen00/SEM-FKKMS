@@ -163,3 +163,15 @@ Route::group(['middleware' => ['auth', 'firstTimeLogin', 'checkApplication']], f
 	Route::get('/complaintReport', [ComplaintController::class, 'StoreReport'])->name('complaint-report');
 });
 	
+
+
+//iman
+use App\Http\Controllers\OtpController;
+
+Route::get('/Mobile-Number', [OtpController::class, 'showMobileForm'])->name('enter.mobile');
+Route::post('/send-otp', [OtpController::class, 'sendSMS'])->name('send.otp');
+Route::get('/otp-verification', [OtpController::class, 'showVerificationForm'])->name('otp.verification');
+Route::post('/otp-verify', [OtpController::class, 'verifyOTP'])->name('otp.verify.perform');
+Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
+Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
+
