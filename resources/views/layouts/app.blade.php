@@ -42,7 +42,7 @@
                     $bgColor = 'bg-success'; // Set the background color for outside vendor
                     break;
                 default:
-                    $bgColor = 'bg-info'; // Set the background color for admins    
+                    $bgColor = 'bg-info'; // Set the background color for admins
                     break;
             }
         @endphp
@@ -54,10 +54,10 @@
     @endauth
 
     <!--   Core JS Files   -->
-    <script src="assets/js/core/popper.min.js"></script>
-    <script src="assets/js/core/bootstrap.min.js"></script>
-    <script src="assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="{{ asset('./assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('./assets/js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('./assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('./assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {

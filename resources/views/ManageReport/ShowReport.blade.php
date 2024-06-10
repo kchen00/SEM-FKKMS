@@ -57,6 +57,66 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales Growth:</p>
+                                    @if($growth > 0)
+                                    <h5 class="font-weight-bolder">
+                                        Better than last month
+                                    </h5>
+                                    @else
+                                    <h5 class="font-weight-bolder">
+                                        Worse than last month
+                                    </h5>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                @if($growth > 0)
+                                <div class="icon icon-shape bg-gradient-success shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-up opacity-10" aria-hidden="true"></i>
+                                </div>
+                                @else
+                                <div class="icon icon-shape bg-gradient-danger shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-down opacity-10" aria-hidden="true"></i>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Revenue:</p>
+                                    <h5 class="font-weight-bolder">
+                                        RM {{ number_format($revenue,2) }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                @if($revenue > 0)
+                                <div class="icon icon-shape bg-gradient-success shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-up opacity-10" aria-hidden="true"></i>
+                                </div>
+                                @else
+                                <div class="icon icon-shape bg-gradient-danger shadow-warning text-center rounded-circle">
+                                    <i class="fa fa-arrow-down opacity-10" aria-hidden="true"></i>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- display the sales chart -->
         <div class="card m-2">
@@ -65,7 +125,7 @@
                     <div class="row">
                         @if($role == "pp_admin")
                             {{-- infor for pupuk admin, hide when the user is participant --}}
-                            <div class="col"> 
+                            <div class="col">
                                 <p class="text-start">KIOSK ID:  {{  $kiosk_id  }}</p>
                                 <p class="text-start">KIOSK Owner:  {{  $kiosk_owner  }}</p>
                             </div>
@@ -85,7 +145,7 @@
                                             <button type="submit" class="btn btn-primary">Filter sales</button>
                                         </div>
                                     </div>
-                                </form>                                
+                                </form>
                             </div>
                         </div>
                         <div class="col position-relative">
@@ -127,6 +187,7 @@
                                     $colspan = 6;
                                 @endphp
                             @endif
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Cost</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sales</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Comments by PUPUK admin</th>
                         </tr>
@@ -179,7 +240,12 @@
                                                                     <input type="text" name="report_ID" hidden value="{{ $sale->report_ID }}">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <input type="text" class="form-control" name="sale_input" placeholder="RM0.00" value="{{  number_format($sale->sales,2)  }}">
+                                                                    <label for="cost_input">Cost:  </label>
+                                                                    <input type="text" class="form-control" id="cost_input" name="cost_input" placeholder="RM0.00" value="{{  number_format($sale->cost,2)  }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="sale_input">Sale:  </label>
+                                                                    <input type="text" class="form-control" id="sale_input" name="sale_input" placeholder="RM0.00" value="{{  number_format($sale->sales,2)  }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
@@ -193,6 +259,10 @@
                                                 </div>
                                             </td>
                                         @endif
+                                            {{-- cost column --}}
+                                            <td class="align-middle">
+                                                <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->cost,2) }}</p>
+                                            </td>
                                             {{-- sales column --}}
                                             <td class="align-middle">
                                                 <p class="text-xs font-weight-bold mb-0">RM  {{  number_format($sale->sales,2) }}</p>
@@ -213,7 +283,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        @endif 
+                                                        @endif
                                                     </div>
                                                 @elseif ($role == "pp_admin")
                                                 {{-- if role is pupuk, show a form to submit comment --}}
@@ -226,10 +296,10 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <input class="btn btn-icon btn-3 btn-primary" type="submit" value='Submit comment'>
-                                                            </div>  
-                                                        </form>                 
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                @endif            
+                                                @endif
                                             </td>
                                     </tr>
                                 @endif
@@ -271,7 +341,7 @@
                                     </td>
                                     <td></td> <!-- Empty column -->
                                 </tr>
-                            @endif    
+                            @endif
                         @endif
                     </tbody>
                 </table>
@@ -280,6 +350,16 @@
 
     </div>
     @include('layouts.footers.auth.footer')
+
+    @if ($errors->any())
+    <script>
+        var errorMessage = "";
+        @foreach ($errors->all() as $error)
+            errorMessage += "{{ $error }}\n";
+        @endforeach
+        alert(errorMessage);
+    </script>
+    @endif
 @endsection
 
 @push('js')
@@ -291,7 +371,7 @@
     function groupSalesFiguresByMonthName(salesData) {
         const groupedSalesFigures = {};
 
-        // Filter sales data for the year 
+        // Filter sales data for the year
         const salesDataYear = salesData.filter(sale => {
             const date = new Date(sale.created_at);
             return date.getFullYear() === parseInt(document.getElementById('viewYear').value);
@@ -330,7 +410,7 @@
 
     // Group the sales figures by year
     const totalSalesPerYear = getTotalSalesPerYear(salesData);
-    
+
     // Group the sales figures by month name
     const groupedSalesFiguresByMonthName = groupSalesFiguresByMonthName(salesData);
 
@@ -340,7 +420,7 @@
     // Extracting month names and sales figures from the object
     const month = Object.keys(groupedSalesFiguresByMonthName); // Array of month names
     const month_sale = Object.values(groupedSalesFiguresByMonthName); // Array of sales figures
-    
+
     // Extracting year and sales figures from the object
     const year = Object.keys(totalSalesPerYear); // Array of year
     const year_sale = Object.values(totalSalesPerYear); // Array of sales figures
@@ -465,7 +545,12 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="sale_input" placeholder="RM0.00">
+                                        <label for="cost_input">Cost:  </label>
+                                        <input type="text" class="form-control" id="cost_input" name="cost_input" placeholder="RM0.00">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sale_input">Sale:  </label>
+                                        <input type="text" class="form-control" id="sale_input" name="sale_input" placeholder="RM0.00">
                                     </div>
                                     <div class="form-group">
                                         <input type="submit" class="form-control btn btn-icon btn-3 btn-primary" value="Submit">
