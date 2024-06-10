@@ -40,19 +40,22 @@
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1">Description</label>
                                         <textarea class="form-control" name="description" rows="3" >{{ old('description', $rental['description']) }}</textarea>
+                                        
                                       </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Start Date</label>
-                                        <label class="form-control">{{$rental['startdate']}}</label>
+                                        <input class="form-control" type="date" name="startdate"
+                                        value="{{ date('Y-m-d', strtotime($rental['startdate'])) }}">
                                         {{-- <input class="form-control" type="date"  name="startdate"> --}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label">End Date</label>
-                                        <label class="form-control">{{$rental['enddate']}}</label>
+                                        <input class="form-control" type="date" name="enddate"
+                                            value="{{ date('Y-m-d', strtotime($rental['enddate'])) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -84,7 +84,7 @@ Route::prefix('rental')->name('rental')->middleware(['auth', 'firstTimeLogin', '
     Route::get('/adminEdit/{id}', [RentalController::class, 'adminEdit'])->name('.adminEdit');
     Route::post('/update/{id}', [RentalController::class, 'update'])->name('.update');
     Route::post('/adminUpdate/{id}', [RentalController::class, 'adminUpdate'])->name('.adminUpdate');
-    Route::get('/show', [RentalController::class, 'show'])->name('.show');
+    Route::get('/show {id}', [RentalController::class, 'show'])->name('.show');
 });
 
 
