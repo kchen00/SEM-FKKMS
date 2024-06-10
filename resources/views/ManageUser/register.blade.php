@@ -33,8 +33,16 @@
         userRole.addEventListener('change', function() {
             renderAdditionalInput(); // Call the function on dropdown change
         });
+
+        // Event listener for the terms link
+        document.getElementById('termsLink').addEventListener('click', function() {
+            // Show the modal or div
+            $('#termsModal').modal('show'); // If using Bootstrap modal
+            // Or if using a simple div, you can directly toggle its visibility
+            // document.getElementById('termsDiv').style.display = 'block';
+        });
     });
-</script> 
+</script>
 @endpush   
 
 @section('content')
@@ -114,7 +122,7 @@
                                 <div class="form-check form-check-info text-start">
                                     <input class="form-check-input" type="checkbox" name="terms" id="flexCheckDefault" >
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms and
+                                        I agree the <a href="javascript:;" class="text-dark font-weight-bolder" id="termsLink">Terms and
                                             Conditions</a>
                                     </label>
                                     @error('terms') <p class='text-danger text-xs'> {{ $message }} </p> @enderror
@@ -136,4 +144,20 @@
         </div>
     </main>
     @include('layouts.footers.guest.footer')
+
+    <!-- Modal or hidden div for terms and conditions -->
+    <div id="termsModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Your terms and conditions content here -->
+                    <p>This is the terms and conditions content...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
